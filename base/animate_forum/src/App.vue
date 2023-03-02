@@ -1,0 +1,54 @@
+<script setup>
+  import HeaderComponent from "/src/components/HeaderComponent.vue"
+  import LeftComponent from "/src/components/LeftComponent.vue"
+  import BottomComponent from "/src/components/BottomComponent.vue"
+</script>
+
+<template>
+
+  <div class="main">
+
+    <HeaderComponent></HeaderComponent>
+    <div class="wrapper">
+
+      <LeftComponent></LeftComponent>
+
+      <router-view></router-view>
+
+    </div>
+
+    <BottomComponent></BottomComponent>
+  </div>
+
+</template>
+
+<style lang="scss" scoped>
+  .video-bg{
+    position: fixed;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    video{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .main{
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    background-color: #17181A;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    .wrapper{
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+  }
+</style>
