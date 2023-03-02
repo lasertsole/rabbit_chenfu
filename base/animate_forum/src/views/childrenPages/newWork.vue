@@ -88,23 +88,26 @@
     
     /****************************Bus监听函数****************************/
     
-    
+    /****************************路由传参****************************/
+    const route = useRoute()
+
+    const showUploadModel = ref(false);
+    function uploadInformation(){
+        if(route.query.showUploadIndex==0){//弹出上传页
+            showUploadModel.value=!showUploadModel.value;
+        }
+    }
+
+
     /****************************挂载触发****************************/
     onMounted(()=>{
         sentRequire();
+        uploadInformation();
     });
 
     /****************************卸载解绑****************************/
     onUnmounted(()=>{
     })
-
-    /****************************路由传参****************************/
-    const route = useRoute()
-
-    const showUploadModel = ref(false);
-    if(route.query.showUploadIndex==0){//弹出上传页
-        showUploadModel.value=!showUploadModel.value;
-    }
 
 </script>
 

@@ -7,7 +7,7 @@
             :submited_time="item.submited_time.substring(0,10)+' '+item.submited_time.substring(11,16)"
             :user_recommend="item.user_recommend">
             <template v-slot:photos>
-                <LazyloadImg v-if="item.user_photos" v-for="(subItem,subIndex) in item.user_photos.split(';')" :src="global.ServerPath+subItem"/>
+                <LazyloadImg class="LazyloadImg" v-if="item.user_photos" v-for="(subItem,subIndex) in item.user_photos.split(';')" :src="global.ServerPath+subItem"/>
             </template>
         </trendsBox>
     </div>
@@ -79,18 +79,22 @@
             }
         }
     }
-    /****************************挂载触发****************************/
-    onMounted(()=>{
-        sentRequire();
-    });
 
     /****************************路由传参****************************/
     const route = useRoute()
 
     const showUploadModel = ref(false);
-    if(route.query.showUploadIndex==1){//弹出上传页
-        showUploadModel.value=!showUploadModel.value;
+    function uploadInformation(){
+        if(route.query.showUploadIndex==1){//弹出上传页
+            showUploadModel.value=!showUploadModel.value;
+        }
     }
+
+    /****************************挂载触发****************************/
+    onMounted(()=>{
+        sentRequire();
+        uploadInformation();
+    });
 
 </script>
 
@@ -137,6 +141,16 @@
                 &:hover{
                     background-color: #78dbff;
                 }
+            }
+        }
+    }
+</style>
+<style lang="scss">
+    .following{
+        .LazyloadImg{
+            img{
+                width: 100%;
+                height: 100%;
             }
         }
     }

@@ -83,20 +83,21 @@
         }
     }
 
-
-    
-    /****************************挂载触发****************************/
-    onMounted(()=>{
-        sentRequire();
-    });
-    
     /****************************路由传参****************************/
     const route = useRoute()
 
     const showUploadModel = ref(false);
-    if(route.query.showUploadIndex==2){//弹出上传页
-        showUploadModel.value=!showUploadModel.value;
+    function uploadInformation(){
+        if(route.query.showUploadIndex==2){//弹出上传页
+            showUploadModel.value=!showUploadModel.value;
+        }
     }
+
+    /****************************挂载触发****************************/
+    onMounted(()=>{
+        sentRequire();
+        uploadInformation();
+    });
     
 </script>
 
