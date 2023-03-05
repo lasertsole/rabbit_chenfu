@@ -23,17 +23,6 @@
 </template>
 
 <style lang="scss" scoped>
-  .video-bg{
-    position: fixed;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    video{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
   .main{
     overflow: hidden;
     position: relative;

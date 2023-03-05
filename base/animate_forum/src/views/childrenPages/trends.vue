@@ -5,7 +5,8 @@
             :user_profile="global.ServerPath+item.user_profile"
             :user_name="item.username"
             :submited_time="item.submited_time.substring(0,10)+' '+item.submited_time.substring(11,16)"
-            :user_recommend="item.user_recommend">
+            :user_recommend="item.user_recommend"
+            :author_id="item.id">
             <template v-slot:photos>
                 <LazyloadImg class="LazyloadImg" v-if="item.user_photos" v-for="(subItem,subIndex) in item.user_photos.split(';')" :src="global.ServerPath+subItem"/>
             </template>

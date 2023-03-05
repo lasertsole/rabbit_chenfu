@@ -10,12 +10,13 @@
 </template>
 
 <script setup>
-    import { onMounted,ref } from "vue";
+    import { onMounted, onUnmounted, ref } from "vue";
     import axios from "axios";
-    import {ElMessage} from "element-plus"
+    import { ElMessage } from "element-plus"
     import announcementBox from "/src/components/message/announcement/announcementBox.vue"
     import useGlobal from "/src/global";
-    import {storeToRefs} from "pinia"
+    import { useRoute, useRouter } from "vue-router";
+    import { storeToRefs } from "pinia"
 
     const global = useGlobal();//引入全局变量
     const store = global.Pinia;//引入持久性存储
@@ -35,10 +36,23 @@
         }
     }
     
+    /****************************Bus监听函数****************************/
+    //用户下线
+    const router = useRouter();
+    function announcementLogout(data){
+        router.replace({ name: 'index'});//强制跳转到其他页面
+    }
+    
     /****************************挂载触发****************************/
     onMounted(()=>{
         sentRequire();
+        global.Bus.on("logout",announcementLogout);//用户下线触发
     });
+
+    /****************************卸载解绑****************************/
+    onUnmounted(()=>{
+        global.Bus.off("logout",announcementLogout);
+    })
 </script>
 
 <style lang="scss" scoped>

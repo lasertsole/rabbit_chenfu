@@ -126,7 +126,7 @@ router.initRouterGuard = function(store) {//初始化路由守卫
     Mainstore = store;
 }
 
-const powerArr=["session"];//只有登录后才能访问的权限页面
+const powerArr=["session", "announcement"];//只有登录后才能访问的权限页面
 
 router.beforeResolve((to, from, next) => {
     const {token} = storeToRefs(Mainstore);

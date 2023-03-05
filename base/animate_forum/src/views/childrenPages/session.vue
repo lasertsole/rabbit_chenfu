@@ -146,7 +146,7 @@
         uniqueContactsArr.value=[];
         AllChatLog.value=[];
         //强制跳转到其他页面
-        router.replace({ name: 'index', query: { userId: '123' }});
+        router.replace({ name: 'index'});
     }
     
     /****************************挂载触发****************************/

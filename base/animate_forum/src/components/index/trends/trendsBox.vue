@@ -26,12 +26,16 @@
         <!-- 模态框内容 -->
         <div class="modelContent">
             <div class="left">
+                <p class="author_recomment">{{user_recommend}}</p>
                 <p><slot name="photos"></slot></p>
-                <!-- <p class="author_recomment">{{item.works_describe}}</p>
-                <p class="follow">
-                    <img @click="changeLike" class="heart" :src="hadLike?'/src/assets/icons/fulledHeart.svg':'/src/assets/icons/followHeart.svg'"/>
-                    <span class="appoint">喜欢{{likeCount}}</span>
-                </p> -->
+            </div>
+            <div class="right">
+                <img :src="user_profile"/>
+                <p class="author_name">{{user_name}}</p>
+                <button @click="clickDm_Button" class="dm_Button">
+                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa=""><path fill="currentColor" d="m174.72 855.68 135.296-45.12 23.68 11.84C388.096 849.536 448.576 864 512 864c211.84 0 384-166.784 384-352S723.84 160 512 160 128 326.784 128 512c0 69.12 24.96 139.264 70.848 199.232l22.08 28.8-46.272 115.584zm-45.248 82.56A32 32 0 0 1 89.6 896l58.368-145.92C94.72 680.32 64 596.864 64 512 64 299.904 256 96 512 96s448 203.904 448 416-192 416-448 416a461.056 461.056 0 0 1-206.912-48.384l-175.616 58.56z"></path><path fill="currentColor" d="M352 576h320q32 0 32 32t-32 32H352q-32 0-32-32t32-32zm32-192h256q32 0 32 32t-32 32H384q-32 0-32-32t32-32z"></path></svg>
+                    私信
+                </button>
             </div>
         </div>
     </el-dialog>
@@ -41,10 +45,9 @@
     import { storeToRefs } from "pinia";
     import useGlobal from "/src/global";
     import { useRouter } from "vue-router";
-    import { ElMessage } from "element-plus";
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
 
-    const props = defineProps({user_profile:String, submited_time:String, user_name:String, user_recommend:String});//从父组件传值到本组件
+    const props = defineProps({user_profile:String, submited_time:String, user_name:String, user_recommend:String, author_id:String});//从父组件传值到本组件
     const global = useGlobal();
     const tempStore = global.TempPinia;
     const store = global.Pinia;
@@ -56,7 +59,12 @@
     function clickShowModel(){
         showModel.value = true;
     }
-    
+
+    /**私聊功能**/
+    const router = useRouter();
+    function clickDm_Button(){
+        router.replace({ name: "session", query: {target_id:props.author_id}});
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -131,31 +139,11 @@
                 .author_recomment{
                     margin: 10px 10px 0px;
                     font-size: 18px;
-                    font-weight: bold;
                     color: black;
                     flex-grow: 1;
                     text-overflow: ellipsis; /* 文本溢出时显示省略号来代表被修剪的文本 */
                     white-space: nowrap; /* 段落中的文本不进行换行 */
                     overflow: hidden; /* 溢出部分隐藏 */
-                }
-
-                .follow{
-                    margin: 10px 10px 0px;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    .heart{
-                        width: 35px;
-                        height: 35px;
-                        cursor: pointer;
-                    }
-
-                    .appoint{
-                        margin-left: 10px;
-                        font-size: 18px;
-                        font-weight: bold;
-                        color: #b8b8b8;
-                    }
                 }
             }
 
@@ -217,6 +205,53 @@
                     &:hover{
                         background-color: #69bad8;
                     }
+                }
+            }
+
+            @media screen and (max-width: 1100px) {
+                flex-direction: column-reverse;
+                align-items: center;
+                .left{
+                    margin-top: 20px;
+                    margin-right: 0px;
+                }
+                .right{
+                    max-width: 680px;
+                    min-width: 680px;
+                    max-height: 150px;
+                    min-height: 150px;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    position: relative;
+                    .author_name{
+                        flex-grow: 1;
+                        margin: 10px  20px;
+                        justify-content: flex-start;
+                    }
+
+                    .dm_Button{
+                        float: right;
+                        margin-top: 0px;
+                        align-self: center;
+                    }
+                }
+            }
+
+            @media screen and (max-width: 700px) {
+                
+                .left{
+                    margin-top: 20px;
+                    margin-right: 0px;
+                    max-width: 460px;
+                    min-width: 460px;
+                }
+                .right{
+                    max-width: 460px;
+                    min-width: 460px;
+                    max-height: 150px;
+                    min-height: 150px;
+                    flex-direction: row;
                 }
             }
         }

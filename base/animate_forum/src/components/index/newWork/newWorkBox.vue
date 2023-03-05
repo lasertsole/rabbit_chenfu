@@ -90,6 +90,9 @@
                 likeCount.value=result.data.appointnum;
             }
         }
+        else{
+            ElMessage.error("需要登录后才能点赞");
+        }
     }
     function cancelLikeAfterLogout(){//下线后取消点赞状态
         hadLike.value=false;
