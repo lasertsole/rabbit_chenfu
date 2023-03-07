@@ -33,7 +33,7 @@
 
 <script setup>
     import axios from 'axios'
-    import {ref, onMounted} from 'vue'
+    import {ref, onMounted, onUnmounted} from 'vue'
     import { storeToRefs } from "pinia"
     import useGlobal from "/src/global"
     import { useRoute } from 'vue-router'
@@ -67,7 +67,7 @@
     async function submitImageSuccess(imgPath, length){//发布动态盒子
         tempimgArr.value.push(imgPath);
         if(tempimgArr.value.length>=length){
-            let result = await axios.post(global.ServerPath+'/submitTrendsBox', { id:userinfo.value.id, username:userinfo.value.username, user_profile:userinfo.value.profile, user_recommend:uploadComment.value, user_photos:tempimgArr.value.join(";")});
+            let result = await axios.post(global.ServerPath+'/submitTrendsBox', { id:userinfo.value.id, user_recommend:uploadComment.value, user_photos:tempimgArr.value.join(";")});
             if(result.data.error){
                 ElMessage.error("提交失败");
             }
@@ -78,6 +78,18 @@
                 ElMessage.success("上传成功");
                 sentRequire();
             }
+        }
+    }
+    
+    /****************************Bus监听函数****************************/
+    const Bus = global.Bus;//从全局属性里获取事件总线
+    async function searchEvent(searchContent){
+        let result = await axios.get(global.ServerPath+"/searchTrendsBox",{params:{searchContent}});
+        if(!result.data.error){
+            showFollowingBoxes.value=result.data;
+        }
+        else{
+            ElMessage.error(result.data.error);
         }
     }
 
@@ -95,7 +107,13 @@
     onMounted(()=>{
         sentRequire();
         uploadInformation();
+        Bus.on("searchEvent", searchEvent);
     });
+
+    /****************************卸载解绑****************************/
+    onUnmounted(()=>{
+        Bus.off("searchEvent", searchEvent);
+    })
 
 </script>
 

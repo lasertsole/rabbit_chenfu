@@ -7,7 +7,8 @@
             :author_name="item.author_name"
             :author_comment="item.author_comment"
             :price="item.price"
-            :sold_num="item.sold_num">
+            :sold_num="item.sold_num"
+            :id="item.id">
         </showCaseBox>
     </div>
 
@@ -33,10 +34,10 @@
 <script setup>
     import axios from "axios";
     import { storeToRefs } from "pinia";
-    import { onMounted,ref } from "vue";
     import useGlobal from "/src/global"
     import { useRoute } from 'vue-router'
     import { ElMessage } from "element-plus";
+    import { onMounted, onUnmounted, ref } from "vue";
     import showCaseBox from "/src/components/reservation/showcase/showCaseBox.vue"
     import showcaseUploadBox from "/src/components/reservation/showcase/showcaseUploadBox.vue"
 
@@ -69,7 +70,7 @@
     }
 
     async function submitImageSuccess(imgPath){//提交图片成功触发事件
-        let obj = { works:imgPath, author_profile:userinfo.value.profile, author_comment:uploadComment.value, price:uploadPrice.value, author_name:userinfo.value.username, id:userinfo.value.id}
+        let obj = { works:imgPath, author_comment:uploadComment.value, price:uploadPrice.value, id:userinfo.value.id}
         let result = await axios.post(global.ServerPath+'/submitShowCaseBox', obj);
         if(result.data.error){
             ElMessage.error("提交失败,存在重复展示作品");
@@ -80,6 +81,18 @@
             uploadPrice.value="";
             uploadComment.value="";
             sentRequire();
+        }
+    }
+
+    /****************************Bus监听函数****************************/
+    const Bus = global.Bus;//从全局属性里获取事件总线
+    async function searchEvent(searchContent){
+        let result = await axios.get(global.ServerPath+"/searchShowCaseBox",{params:{searchContent}});
+        if(!result.data.error){
+            showCaseBoxes.value=result.data;
+        }
+        else{
+            ElMessage.error(result.data.error);
         }
     }
 
@@ -97,7 +110,13 @@
     onMounted(()=>{
         sentRequire();
         uploadInformation();
+        Bus.on("searchEvent", searchEvent);
     });
+
+    /****************************卸载解绑****************************/
+    onUnmounted(()=>{
+        Bus.off("searchEvent", searchEvent);
+    })
     
 </script>
 

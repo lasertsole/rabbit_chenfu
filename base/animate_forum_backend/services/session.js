@@ -51,23 +51,9 @@ async function submitChat(req, res){//提交聊天内容
     }
 }
 
-/***********************消息-公告***********************/
-async function getAnnouncementBox(req, res) {//获取公告盒子方法
-    let sql = 'select * from announcement order by publisher_time desc limit 50'//按创建时间排序
-    result = await db.query(sql)
-    if (result.error) {
-        res.send({error: '无公告盒子'})
-    } else {
-        res.send(result)
-    }
-};
-
 module.exports={
     //消息-会话
     getSessionBox,
     getPersonList,
     submitChat,
-
-    //消息-公告
-    getAnnouncementBox,
 }

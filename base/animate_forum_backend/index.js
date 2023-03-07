@@ -1,9 +1,16 @@
 const express = require("express")
 const cors = require('cors')
 const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName, getInfoByID} = require("./services/account.js")
-const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatus, changeLike, getTrendsBox, submitTrendsBoxImage, submitTrendsBox} = require("./services/indexPage.js")
-const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, getRequireBox, submitRequireBoxImage, submitRequireBox} = require("./services/reservePage.js")
-const {getSessionBox, getPersonList, submitChat, getAnnouncementBox} = require("./services/messagePage.js")
+
+const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatus, changeLike, searchNewWorkBox} = require("./services/newWork.js")
+const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
+
+const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox} = require("./services/showcase.js")
+const {getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox} = require("./services/require.js")
+
+const {getSessionBox, getPersonList, submitChat} = require("./services/session.js")
+const {getAnnouncementBox} = require("./services/announcement.js")
+
 const path = require('path')
 
 const PORT = 8000;
@@ -47,21 +54,25 @@ app.post("/submitnewWorkBoxImage", submitnewWorkBoxImage)//用户上传新作品
 app.post("/submitnewWorkBox", submitnewWorkBox)//用户上传新作品盒子
 app.post("/getLikeStatus", getLikeStatus)//改变点赞状态
 app.post("/changeLike", changeLike)//改变点赞状态
+app.get("/searchNewWorkBox", searchNewWorkBox)//搜索新作品盒子
 
-/*主页-关注*/
+/*主页-动态*/
 app.get("/getTrendsBox", getTrendsBox)//获取关注盒子方法
 app.post("/submitTrendsBoxImage", submitTrendsBoxImage)//用户上传关注盒子的图片
 app.post("/submitTrendsBox", submitTrendsBox)//用户上传动态盒子
+app.get("/searchTrendsBox", searchTrendsBox);//搜索动态盒子
 
 /*约稿-橱窗*/
 app.get("/getShowCaseBox", getShowCaseBox)//获取橱窗盒子方法
 app.post("/submitShowCaseBoxImage", submitShowCaseBoxImage)//用户上传橱窗盒子的图片
 app.post("/submitShowCaseBox", submitShowCaseBox)//用户上传推荐盒子
+app.get("/searchShowCaseBox", searchShowCaseBox)//搜索橱窗盒子
 
 /*约稿-需求帖*/
 app.get("/getRequireBox", getRequireBox)//获取需求盒子方法
 app.post("/submitRequireBoxImage", submitRequireBoxImage)//用户上传需求盒子的图片
 app.post("/submitRequireBox", submitRequireBox)//用户上传需求盒子
+app.get("/searchRequireBox", searchRequireBox)//搜索需求盒子
 
 /*消息-会话*/
 app.get("/getSessionBox", getSessionBox)//获取消息盒子方法

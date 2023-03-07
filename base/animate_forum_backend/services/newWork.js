@@ -3,7 +3,7 @@ const { fileUpload } = require('./manner.js')
 
 /***********************主页-新作品***********************/
 async function getnewWorkBox(req, res) {//获取新作品盒子方法
-    let sql = 'select * from newWork order by author_profile limit 50'
+    let sql = 'select works,works_describe,profile as author_profile,username as author_name,appoint,author_id,work_id from newWork left join user_login on newWork.author_id=user_login.id order by newWork.created_time desc limit 50'
     let result = await db.query(sql)
     if (result.error) {
         res.send({error: '获取推荐盒子失败'})
@@ -26,12 +26,10 @@ async function submitnewWorkBox(req, res){//用户上传新作品盒子
     let works = "/files/"+data.works;
     console.log(works);
     let works_describe = data.works_describe;
-    let author_profile = data.author_profile;
-    let author_name = data.author_name;
     let author_id = data.author_id;
 
-    let sql = 'insert into newWork (works, works_describe, author_profile, author_name, appoint, author_id) values (?, ?, ?, ?, 0, ?)'
-    let result = await db.query(sql, [works, works_describe, author_profile, author_name, author_id]);
+    let sql = 'insert into newWork (works, works_describe, appoint, author_id) values (?, ?, 0, ?)'
+    let result = await db.query(sql, [works, works_describe, author_id]);
     if(result.error||result.length==0){
         res.send({error:"数据库插入失败"});
     }else{
@@ -94,49 +92,17 @@ async function changeLike(req, res){//改变点赞状态
     res.send({LikeStatus:!LikeStatus,appointnum});
 }
 
-/***********************主页-动态***********************/
-async function getTrendsBox(req, res) {//获取动态盒子方法
-    let sql = 'select * from trends order by id limit 50'
-    let result = await db.query(sql)
-    if (result.error) {
-        res.send({error: '获取关注盒子失败'})
-    } else {
-        res.send(result)
-    }
-};
+async function searchNewWorkBox(req, res){//搜索新作品盒子
+    let data=req.query;
+    let searchContent = data.searchContent;
 
-async function submitTrendsBoxImage(req, res) {//用户上传动态盒子的图片
-    let result = await fileUpload(req);
-    if(!result.error){
-        res.send(result);
-    }else{
-        res.send({error:"图片上传失败"});
-    }
-};
-
-async function submitTrendsBox(req, res){//用户上传动态盒子
-    let data = req.body;
-    let id = data.id;
-    let username = data.username;
-    let user_profile = data.user_profile;
-    let user_recommend = data.user_recommend;
-    let user_photos = data.user_photos;
-    if(user_photos[0]!=undefined){
-        user_photos = user_photos.split(";");
-        user_photos = user_photos.map((item)=>{return "/files/" + item;});
-        user_photos = user_photos.join(";");
-    }
-    else{
-        user_photos = undefined;
-    }
-
-    let sql = 'insert into trends (id, username, user_profile, user_recommend, user_photos) values (?, ?, ?, ?, ?)'
-    let result = await db.query(sql, [id, username, user_profile, user_recommend, user_photos]);
-    if(result.error||result.length==0){
-        res.send({error:"数据库插入失败"});
-    }else{
-        res.send({success:"数据库插入成功"});
-    }
+    searchContent = "%"+searchContent+"%";
+    let sql = `select works,works_describe,profile as author_profile,username as author_name,appoint,author_id,work_id 
+    from newWork left join user_login on newWork.author_id=user_login.id where works_describe like ? or username like ?
+     order by newWork.created_time desc limit 50`;
+    let result = await db.query(sql, [searchContent, searchContent]);
+    
+    if(!result.error){res.send(result);}else{res.send({error:"查找发送错误"});};
 }
 
 module.exports={
@@ -146,9 +112,5 @@ module.exports={
     submitnewWorkBox,
     getLikeStatus,
     changeLike,
-
-    //主页-关注
-    getTrendsBox,
-    submitTrendsBoxImage,
-    submitTrendsBox,
+    searchNewWorkBox,
 }

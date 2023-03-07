@@ -57,7 +57,6 @@
   }
 
     const handleImageSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
-        console.log(response);
         emits("submitImageSuccess", response);
     }
 

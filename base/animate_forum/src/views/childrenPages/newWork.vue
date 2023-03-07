@@ -5,8 +5,8 @@
                 <newWorkBox
                     :item="item"
                     :url="url"
-                    :index="index"
-                ></newWorkBox>
+                    :index="index">
+                </newWorkBox>
             </template>
         </Waterfall>
     </div>
@@ -75,7 +75,7 @@
             ElMessage.error("文件上传错误");
             return;
         }
-        let result = await axios.post(global.ServerPath+'/submitnewWorkBox', { works:imgPath, works_describe:uploadComment.value, author_profile:userinfo.value.profile, author_name:userinfo.value.username, author_id:userinfo.value.id });
+        let result = await axios.post(global.ServerPath+'/submitnewWorkBox', { works:imgPath, works_describe:uploadComment.value, author_id:userinfo.value.id });
         if(result.data.error){
             ElMessage.error("提交失败,存在重复作品");
         }
@@ -87,7 +87,22 @@
     }
     
     /****************************Bus监听函数****************************/
-    
+    const Bus = global.Bus;//从全局属性里获取事件总线
+    async function searchEvent(searchContent){
+        let result = await axios.get(global.ServerPath+"/searchNewWorkBox",{params:{searchContent}});
+        if(!result.data.error){
+            imgsArr.value=[];
+            setTimeout(function(){//Waterfall小bug，需要延迟才能正常刷新
+                imgsArr.value=result.data.map((item)=>{
+                    return {src:global.ServerPath+item.works, works_describe:item.works_describe, author_profile:global.ServerPath+item.author_profile, author_name:item.author_name, appoint:item.appoint, author_id:item.author_id, work_id:item.work_id};
+                });
+            },5);
+        }
+        else{
+            ElMessage.error(result.data.error);
+        }
+    }
+
     /****************************路由传参****************************/
     const route = useRoute()
 
@@ -102,11 +117,13 @@
     /****************************挂载触发****************************/
     onMounted(()=>{
         sentRequire();
+        Bus.on("searchEvent", searchEvent);
         uploadInformation();
     });
 
     /****************************卸载解绑****************************/
     onUnmounted(()=>{
+        Bus.off("searchEvent", searchEvent);
     })
 
 </script>

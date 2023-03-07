@@ -5,8 +5,8 @@
             <LazyloadImg class="LazyloadImg works" :src="works"/>
         </div>
         <div class="infoBox">
-            <LazyloadImg class="author_profile LazyloadImg" :src="author_profile"/>
-            <p class="author_name">{{author_name}}</p>
+            <LazyloadImg class="author_profile LazyloadImg" :src="id==userinfo?.id?global.ServerPath+userinfo.profile:author_profile"/>
+            <p class="author_name">{{id==userinfo?.id?userinfo.username:author_name}}</p>
             <p class="author_comment">{{author_comment}}</p>
             <p class="transact_info">
                 <span class="price">￥{{price}}</span>
@@ -34,8 +34,8 @@
                 </p>
             </div>
             <div class="right">
-                <img :src="author_profile"/>
-                <p class="author_name">{{author_name}}</p>
+                <img :src="id==userinfo?.id?global.ServerPath+userinfo.profile:author_profile"/>
+                <p class="author_name">{{id==userinfo?.id?userinfo.username:author_name}}</p>
                 <button @click="clickDm_Button" class="dm_Button">
                     <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa=""><path fill="currentColor" d="m174.72 855.68 135.296-45.12 23.68 11.84C388.096 849.536 448.576 864 512 864c211.84 0 384-166.784 384-352S723.84 160 512 160 128 326.784 128 512c0 69.12 24.96 139.264 70.848 199.232l22.08 28.8-46.272 115.584zm-45.248 82.56A32 32 0 0 1 89.6 896l58.368-145.92C94.72 680.32 64 596.864 64 512 64 299.904 256 96 512 96s448 203.904 448 416-192 416-448 416a461.056 461.056 0 0 1-206.912-48.384l-175.616 58.56z"></path><path fill="currentColor" d="M352 576h320q32 0 32 32t-32 32H352q-32 0-32-32t32-32zm32-192h256q32 0 32 32t-32 32H384q-32 0-32-32t32-32z"></path></svg>
                     私信
@@ -53,7 +53,10 @@
     import { LazyloadImg } from "vue3-lazyload-img"
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
 
-    const props = defineProps({works:String, author_profile:String, author_name:String, author_comment:String, price:Number, sold_num:Number});//从父组件传值到本组件
+    const props = defineProps({works:String, author_profile:String, author_name:String, author_comment:String, price:Number, sold_num:Number, id:String});//从父组件传值到本组件
+    const global = useGlobal();
+    const tempStore = global.TempPinia;
+    const { userinfo } = storeToRefs(tempStore);
 
     /**控制模态框显现与否**/
     const showModel = ref(false);
@@ -64,7 +67,7 @@
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
-        router.replace({ name: "session", query: {target_id:props.author_id}});
+        router.replace({ name: "session", query: {target_id:props.id}});
     }
 </script>
 

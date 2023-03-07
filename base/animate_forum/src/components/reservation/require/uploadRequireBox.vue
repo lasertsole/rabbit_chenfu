@@ -89,7 +89,7 @@
         let imgPath = result.data;
         
         let nowDate=props.calendar?.toLocaleString('zh', { hour12: false }).split('/').join("-");//将时间格式化(?有可能为underfine)        
-        let obj = {title:props.title, describe:props.describe, describe_image:imgPath, money:props.money, tag:props.tag, calendar:nowDate, id:userinfo.value.id, username:userinfo.value.username};
+        let obj = {title:props.title, describe:props.describe, describe_image:imgPath, money:props.money, tag:props.tag, calendar:nowDate, id:userinfo.value.id};
         result = await axios.post(global.ServerPath+"/submitRequireBox", obj);//第二次请求
         if(!result.data.error){
             emits("submitImageSuccess");

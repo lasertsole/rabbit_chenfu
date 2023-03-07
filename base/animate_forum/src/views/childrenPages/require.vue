@@ -8,11 +8,16 @@
             :money="item.money"
             :tag="item.tag"
             :calendar="item.calendar.substring(0, 10)"
-            >
+            :profile="global.ServerPath+item.profile"
+            :username="item.username"
+            :id="item.id">
         </requireBox>
     </div>
 
-    <el-dialog class="uploadBox" style="width: 800px; padding: 30px 56px; border-radius: 10px;" v-model="showUploadModel" :show-close="true">
+    <el-dialog class="uploadBox"
+        style="width: 800px; padding: 30px 56px; border-radius: 10px;"
+        v-model="showUploadModel"
+        :show-close="true">
         <!-- 模态框头部 -->
         <template #header="{ close, titleId, titleClass }">
             <div class="my-header">
@@ -62,7 +67,7 @@
 
 <script setup>
     import axios from "axios";
-    import { onMounted,ref } from "vue";
+    import { onMounted, onUnmounted, ref } from "vue";
     import { useRoute } from 'vue-router'
     import useGlobal from "/src/global";
     import { ElMessage } from "element-plus";
@@ -137,9 +142,20 @@
         sentRequire();
     }
 
+    /****************************Bus监听函数****************************/
+    const Bus = global.Bus;//从全局属性里获取事件总线
+    async function searchEvent(searchContent){
+        let result = await axios.get(global.ServerPath+"/searchRequireBox",{params:{searchContent}});
+        if(!result.data.error){
+            showRequireBoxes.value=result.data;
+        }
+        else{
+            ElMessage.error(result.data.error);
+        }
+    }
+    
     /****************************路由传参****************************/
     const route = useRoute()
-
     const showUploadModel = ref(false);
     function uploadInformation(){
         if(route.query.showUploadIndex==3){//弹出上传页
@@ -151,7 +167,13 @@
     onMounted(()=>{
         sentRequire();
         uploadInformation();
+        Bus.on("searchEvent", searchEvent);
     });
+
+    /****************************卸载解绑****************************/
+    onUnmounted(()=>{
+        Bus.off("searchEvent", searchEvent);
+    })
 
 </script>
 
