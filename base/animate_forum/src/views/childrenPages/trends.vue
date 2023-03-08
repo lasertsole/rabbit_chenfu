@@ -6,10 +6,8 @@
             :user_name="item.username"
             :submited_time="item.submited_time.substring(0,10)+' '+item.submited_time.substring(11,16)"
             :user_recommend="item.user_recommend"
-            :author_id="item.id">
-            <template v-slot:photos>
-                <LazyloadImg class="LazyloadImg" v-if="item.user_photos" v-for="(subItem,subIndex) in item.user_photos.split(';')" :src="global.ServerPath+subItem"/>
-            </template>
+            :author_id="item.id"
+            :imageArr="item.user_photos">
         </trendsBox>
     </div>
 
@@ -38,7 +36,6 @@
     import useGlobal from "/src/global"
     import { useRoute } from 'vue-router'
     import { ElMessage } from "element-plus";
-    import { LazyloadImg } from "vue3-lazyload-img"
     import trendsBox from "/src/components/index/trends/trendsBox.vue"
     import trendsUploadBox from "/src/components/index/trends/trendsUploadBox.vue"
 
@@ -121,6 +118,7 @@
     .following{
         padding: 20px 40px;
         img{
+            display: none;
             width: 100%;
             margin-bottom: 10px;
             object-fit: cover;
@@ -166,10 +164,15 @@
 </style>
 <style lang="scss">
     .following{
-        .LazyloadImg{
-            img{
-                width: 100%;
-                height: 100%;
+        .trendsingBox{
+            .user_photos{
+                .LazyloadImg{
+                    pointer-events:none;//trendsingBox内的图片设置不可点击
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
             }
         }
     }

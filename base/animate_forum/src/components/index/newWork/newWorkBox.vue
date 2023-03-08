@@ -5,11 +5,19 @@
         <p class="works_describe">{{item.works_describe}}</p>
         <p class="anthor_info">
             <span class="left">
-                <img class="author_profile" :src="item.author_id==userinfo?.id?global.ServerPath+userinfo.profile:item.author_profile">
+                <el-image :src="item.author_id==userinfo?.id?global.ServerPath+userinfo.profile:item.author_profile" 
+                    scroll-container=".page-content"
+                    class="author_profile"
+                    :lazy="lazyLoad"
+                    :key="index"/>
                 <span class="author_name">{{item.author_id==userinfo?.id?userinfo.username:item.author_name}}</span>
             </span>
             <span class="right">
-                <img class="heart" :src="hadLike?'/src/assets/icons/fulledHeart.svg':'/src/assets/icons/followHeart.svg'"/>
+                <el-image class="heart"
+                    scroll-container=".page-content"
+                    :src="hadLike?'/src/assets/icons/fulledHeart.svg':'/src/assets/icons/followHeart.svg'"
+                    :lazy="lazyLoad"
+                    :key="index"/>
                 <span class="appoint">{{likeCount}}</span>
             </span>
         </p>
@@ -26,7 +34,7 @@
         <!-- 模态框内容 -->
         <div class="modelContent">
             <div class="left">
-                <p><LazyImg :url="url"/></p>
+                <p><el-image :key="index" fit="fill" :src="url" :preview-src-list="[url]"/></p>
                 <p class="author_recomment">{{item.works_describe}}</p>
                 <p class="follow">
                     <img @click="changeLike" class="heart" :src="hadLike?'/src/assets/icons/fulledHeart.svg':'/src/assets/icons/followHeart.svg'"/>
@@ -43,7 +51,6 @@
             </div>
         </div>
     </el-dialog>
-
 </template>
 
 <script setup>
@@ -67,6 +74,9 @@
     function clickShowModel(){
         showModel.value = true;
     }
+
+    /**控制懒加载**/
+    const lazyLoad=ref(false);
 
     /**点赞功能**/
     const hadLike = ref(false);
@@ -111,6 +121,7 @@
         getLikeStatus();
         global.Bus.on("login", resetLikeAfterLogout);
         global.Bus.on("logout", cancelLikeAfterLogout);
+        lazyLoad.value=true;//启动懒加载
     })
     /**卸载触发**/
     onUnmounted(()=>{

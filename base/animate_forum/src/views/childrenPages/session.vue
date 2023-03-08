@@ -15,7 +15,11 @@
             <el-scrollbar>
                 <p v-for="(item, index) in personList" :key="item" class="scrollbar-demo-item" @click="indexContacts=index">
                     <div class="profile_box">
-                        <img class="profile" :src="global.ServerPath+item.profile">
+                        <el-image class="profile"
+                            :lazy="lazyLoad"
+                            :src="global.ServerPath+item.profile"
+                            scroll-container=".page-content"
+                        />
                     </div>
                     <div class="info">
                         <div class="user_name">{{item.username}}</div>
@@ -41,6 +45,8 @@
     const tempStore = global.TempPinia;//引入临时性存储
     const { token }=storeToRefs(store);//token用于判断是否在线
     const { userinfo }=storeToRefs(tempStore);//临时存储的用户信息
+
+    const lazyLoad = ref(false);//设置懒加载
 
     const chatResult = ref([]);//聊天盒子容器
     const personList = ref([]);//右侧联系人列表
@@ -158,6 +164,7 @@
         }
         global.Bus.on("login",sessionLogin);//用户上线触发
         global.Bus.on("logout",sessionLogout);//用户下线触发
+        lazyLoad.value=true;//开启懒加载
     });
 
     /****************************卸载解绑****************************/

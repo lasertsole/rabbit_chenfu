@@ -7,7 +7,12 @@
             </div>
             <div class="rightBox">
                 <!-- 可以为空 -->
-                <LazyloadImg class="LazyloadImg" v-if="describe_image!=global.ServerPath" :src="describe_image"/>
+                <el-image class="LazyloadImg"
+                    v-if="describe_image!=global.ServerPath"
+                    :src="describe_image"
+                    :lazy="lazyLoad"
+                    scroll-container=".page-content"
+                />
             </div>
         </div>
         <div class="require-box-figure">
@@ -30,7 +35,7 @@
             <div class="left">
                 <div class="title">{{title}}</div>
                 <div class="describe">{{describe_require}}</div>
-                <div><LazyloadImg class="LazyloadImg" v-if="describe_image!=global.ServerPath" :src="describe_image"/></div>
+                <div><el-image :preview-src-list="[describe_image]" class="LazyloadImg" v-if="describe_image!=global.ServerPath" :src="describe_image"/></div>
             </div>
             <div class="right">
                 <img :src="id==userinfo?.id?global.ServerPath+userinfo.profile:profile"/>
@@ -48,7 +53,6 @@
     import { storeToRefs } from "pinia";
     import useGlobal from "/src/global";
     import { useRouter } from "vue-router";
-    import { LazyloadImg } from "vue3-lazyload-img"
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
 
     const props = defineProps({title:String, describe_require:String, describe_image:String, money:String, tag:String, calendar:String, profile:String, username:String, id:String});//从父组件传值到本组件
@@ -62,11 +66,19 @@
         showModel.value = true;
     }
 
+    /**控制懒加载**/
+    const lazyLoad=ref(false);
+
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
         router.replace({ name: "session", query: {target_id:props.id}});
     }
+
+    /**挂载触发**/
+    onMounted(()=>{
+        lazyLoad.value=true;//启动懒加载
+    })
 </script>
 
 <style lang="scss" scoped>

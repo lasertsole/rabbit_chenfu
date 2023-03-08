@@ -2,7 +2,10 @@
     <div class="manager">
         <header class="user_info">
             <div class="user_profile">
-                <img :src="userinfo?global.ServerPath+userinfo.profile:global.ServerPath+'/files/anonymous.svg'">
+                <el-image class="lazyLoading"
+                    :preview-src-list="userinfo?[global.ServerPath+userinfo.profile]:undefined"
+                    :src="userinfo?global.ServerPath+userinfo.profile:global.ServerPath+'/files/anonymous.svg'"
+                />
             </div>
 
             <div class="user-name">
@@ -76,7 +79,8 @@
                 border-radius: 50%;
                 overflow: hidden;
 
-                img{
+                .lazyLoading{
+                    cursor: pointer;
                     width: 100%;
                     height: 100%;
                     object-fit: fill;

@@ -2,7 +2,10 @@
     <div @click="clickShowModel" class="trendsingBox">
         <div class="user_info">
             <div class="user_header">
-                <img class="user_profile" :src="author_id==userinfo?.id?global.ServerPath+userinfo.profile:user_profile"/>
+                <el-image class="user_profile"
+                    :src="author_id==userinfo?.id?global.ServerPath+userinfo.profile:user_profile"
+                    :lazy="lazyLoad"
+                    scroll-container=".page-content"/>
                 <span class="user_name">{{author_id==userinfo?.id?userinfo.username:user_name}}</span>
             </div>
             <span class="submited_time">{{submited_time}}</span>
@@ -11,7 +14,14 @@
             {{user_recommend}}
         </div>
         <div class="user_photos">
-            <slot name="photos"></slot>
+            <el-image class="LazyloadImg"
+                scroll-container=".page-content"
+                :lazy="lazyLoad"
+                v-if="imageArr!=null"
+                v-for="(subItem,subIndex) in imageArr.split(';')"
+                :key="subIndex"
+                :src="global.ServerPath+subItem"
+            />
         </div>
     </div>
 
@@ -27,7 +37,15 @@
         <div class="modelContent">
             <div class="left">
                 <p class="author_recomment">{{user_recommend}}</p>
-                <p><slot name="photos"></slot></p>
+                <p>
+                    <el-image class="LazyloadImg"
+                        :preview-src-list="[...imageArr.split(';').map((item)=>{return global.ServerPath+item})]"
+                        v-if="imageArr!=null"
+                        v-for="(subItem,subIndex) in imageArr.split(';')"
+                        :key="subIndex"
+                        :src="global.ServerPath+subItem"
+                    />
+                </p>
             </div>
             <div class="right">
                 <img :src="author_id==userinfo?.id?global.ServerPath+userinfo.profile:user_profile"/>
@@ -47,7 +65,7 @@
     import { useRouter } from "vue-router";
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
 
-    const props = defineProps({user_profile:String, submited_time:String, user_name:String, user_recommend:String, author_id:String});//从父组件传值到本组件
+    const props = defineProps({user_profile:String, submited_time:String, user_name:String, user_recommend:String, author_id:String, imageArr:String});//从父组件传值到本组件
     const global = useGlobal();
     const tempStore = global.TempPinia;
     const store = global.Pinia;
@@ -60,11 +78,19 @@
         showModel.value = true;
     }
 
+    /**控制懒加载**/
+    const lazyLoad=ref(false);
+
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
         router.replace({ name: "session", query: {target_id:props.author_id}});
     }
+
+    /**挂载触发**/
+    onMounted(()=>{
+        lazyLoad.value=true;//启动懒加载
+    })
 </script>
 
 <style lang="scss" scoped>
@@ -137,7 +163,7 @@
                 margin-right: 20px;
                 padding: 24px;
                 .author_recomment{
-                    margin: 10px 10px 0px;
+                    margin: 10px 10px 10px;
                     font-size: 18px;
                     color: black;
                     flex-grow: 1;

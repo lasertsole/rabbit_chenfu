@@ -2,10 +2,17 @@
     
     <div class="showcasebox" @click="clickShowModel">
         <div class="worksBox">
-            <LazyloadImg class="LazyloadImg works" :src="works"/>
+            <el-image class="LazyloadImg works"
+                :src="works"
+                :lazy="lazyLoad"
+                scroll-container=".page-content"
+            />
         </div>
         <div class="infoBox">
-            <LazyloadImg class="author_profile LazyloadImg" :src="id==userinfo?.id?global.ServerPath+userinfo.profile:author_profile"/>
+            <el-image class="author_profile LazyloadImg"
+                :src="id==userinfo?.id?global.ServerPath+userinfo.profile:author_profile"
+                :lazy="lazyLoad"
+                scroll-container=".page-content"/>
             <p class="author_name">{{id==userinfo?.id?userinfo.username:author_name}}</p>
             <p class="author_comment">{{author_comment}}</p>
             <p class="transact_info">
@@ -26,7 +33,7 @@
         <!-- 模态框内容 -->
         <div class="modelContent">
             <div class="left">
-                <p><LazyloadImg :src="works"/></p>
+                <p><el-image :preview-src-list="[works]" :src="works"/></p>
                 <p class="author_recomment">{{author_comment}}</p>
                 <p class="transact_info">
                     <span class="price">￥{{price}}</span>
@@ -50,7 +57,6 @@
     import { storeToRefs } from "pinia";
     import useGlobal from "/src/global";
     import { useRouter } from "vue-router";
-    import { LazyloadImg } from "vue3-lazyload-img"
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
 
     const props = defineProps({works:String, author_profile:String, author_name:String, author_comment:String, price:Number, sold_num:Number, id:String});//从父组件传值到本组件
@@ -64,11 +70,19 @@
         showModel.value = true;
     }
 
+    /**控制懒加载**/
+    const lazyLoad=ref(false);
+
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
         router.replace({ name: "session", query: {target_id:props.id}});
     }
+
+    /**挂载触发**/
+    onMounted(()=>{
+       lazyLoad.value=true;//启动懒加载
+    })
 </script>
 
 <style lang="scss" scoped>
