@@ -33,10 +33,10 @@
 
     /****************************显示四个功能按键****************************/
     const managerBoxArr = ref([
-        {icon:'/src/assets/icons/myWorks.svg', title:"发表作品", link:"/index/newWork"},
-        {icon:'/src/assets/icons/trend.svg', title:"发表动态", link:"/index/trends"},
-        {icon:'/src/assets/icons/showCase.svg', title:"橱窗展出", link:"/Reservation/showcase"},
-        {icon:'/src/assets/icons/require.svg', title:"发需求帖", link:"/Reservation/require"},
+        {icon:'/icons/myWorks.svg', title:"发表作品", link:"/index/newWork"},
+        {icon:'/icons/trend.svg', title:"发表动态", link:"/index/trends"},
+        {icon:'/icons/showCase.svg', title:"橱窗展出", link:"/Reservation/showcase"},
+        {icon:'/icons/require.svg', title:"发需求帖", link:"/Reservation/require"},
     ]);
 
     /****************************显示用户信息功能****************************/

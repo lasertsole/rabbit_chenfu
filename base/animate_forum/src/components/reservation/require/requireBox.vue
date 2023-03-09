@@ -16,9 +16,9 @@
             </div>
         </div>
         <div class="require-box-figure">
-            <span class="moneny"><img src="/src/assets/icons/money.svg"/>{{money}}</span>
-            <span class="tag"><img src="/src/assets/icons/tag.svg"/>{{tag}}</span>
-            <span class="calendar"><img src="/src/assets/icons/calendar.svg"/>{{calendar}}</span>
+            <span class="moneny"><img src="/icons/money.svg"/>{{money}}</span>
+            <span class="tag"><img src="/icons/tag.svg"/>{{tag}}</span>
+            <span class="calendar"><img src="/icons/calendar.svg"/>{{calendar}}</span>
         </div>
     </div>
 

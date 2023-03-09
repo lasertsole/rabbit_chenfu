@@ -48,7 +48,7 @@
 
     async function sentRequire(){//请求推荐盒子
         imgsArr.value=[];
-        let resuit = await axios.get('http://localhost:8000/getnewWorkBox');
+        let resuit = await axios.get(global.ServerPath+'/getnewWorkBox');
         let tempArr=[];
         resuit.data.forEach((item)=>{
             tempArr.push({src:global.ServerPath+item.works, works_describe:item.works_describe, author_profile:global.ServerPath+item.author_profile, author_name:item.author_name, appoint:item.appoint, author_id:item.author_id, work_id:item.work_id});

@@ -47,7 +47,7 @@
 
     const showCaseBoxes = ref();
     async function sentRequire(){//请求橱窗盒子
-        let resuit = await axios.get('http://localhost:8000/getShowCaseBox');
+        let resuit = await axios.get(global.ServerPath+'/getShowCaseBox');
         showCaseBoxes.value = resuit.data;
     }
 

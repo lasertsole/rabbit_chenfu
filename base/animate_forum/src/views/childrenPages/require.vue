@@ -78,7 +78,7 @@
 
     const showRequireBoxes = ref();//用于改变UI的变量
     async function sentRequire(){//请求橱窗盒子
-        let resuit = await axios.get('http://localhost:8000/getRequireBox');
+        let resuit = await axios.get(global.ServerPath+'/getRequireBox');
         showRequireBoxes.value = resuit.data;
     }
     

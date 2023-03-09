@@ -52,7 +52,7 @@
             font-size: 15px;
             font-weight: 500;
             padding: 0 20px 0 40px;
-            background-image: url("/src/assets/icons/search.svg");
+            background-image: url("/icons/search.svg");
             background-size: 14px;
             background-repeat: no-repeat;
             background-position: 16px 48%;

@@ -33,8 +33,9 @@ app.config.globalProperties.TempPinia = useTempStore();
 //事件总线全局化
 app.config.globalProperties.Bus = new mitt();
 //服务器地址与端口全局化
-app.config.globalProperties.ServerPath = "http://localhost:8000";
-// app.config.globalProperties.ServerPath = "http://192.168.1.70:8000";//局域网内服务器地址
+let ServerPath="http://localhost:8000"//本地服务器地址
+//let ServerPath="http://118.140.206.140:50673"//外部服务器地址
+app.config.globalProperties.ServerPath = ServerPath;
 
 //axio请求拦截器
 axios.interceptors.request.use((config)=>{

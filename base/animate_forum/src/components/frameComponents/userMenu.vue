@@ -4,7 +4,7 @@
         <el-popover :visible="visible" placement="bottom" :width="160">
             <ul v-if="userinfo!=undefined" style="text-align: center; margin: 0">
                 <li style="text-align: right;">
-                    <img @click="visible = false" style="width:17px; height:17px; cursor: pointer;" src="/src/assets/icons/close.svg">
+                    <img @click="visible = false" style="width:17px; height:17px; cursor: pointer;" src="/icons/close.svg">
                 </li>
                 <li style="padding: 5px; color: gray; cursor: pointer;" @click="reset">个人设置</li>
                 <li style="padding: 5px; color: gray; cursor: pointer;" @click="logout">退出登录</li>
@@ -13,7 +13,7 @@
                 <li style="padding: 5px; color: gray; cursor: pointer;" @click="modelShow=true;visible = false">登录</li>
             </ul>
             <template #reference>
-                <img class="profile-img" @click="visible=true" :src="userinfo?global.ServerPath+userinfo.profile:'/src/assets/icons/anonymous.svg'"/>
+                <img class="profile-img" @click="visible=true" :src="userinfo?global.ServerPath+userinfo.profile:'/icons/anonymous.svg'"/>
             </template>
         </el-popover>
     </div>

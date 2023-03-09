@@ -54,7 +54,7 @@
     let setIntervalContain;//轮询函数容器
     async function sentRequire(){//获取聊天盒子
         /******获取聊天盒子******/
-        let result = await axios.get('http://localhost:8000/getSessionBox');
+        let result = await axios.get(global.ServerPath+'/getSessionBox');
         if(result.error=="用户未登录"){
             ElMessage.error('请先登录');
         }else if(result.error=="token错误"){

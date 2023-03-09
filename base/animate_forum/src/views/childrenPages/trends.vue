@@ -45,7 +45,7 @@
 
     const showFollowingBoxes = ref();
     async function sentRequire(){//请求关注盒子
-        let resuit = await axios.get('http://localhost:8000/getTrendsBox');
+        let resuit = await axios.get(global.ServerPath+'/getTrendsBox');
         showFollowingBoxes.value=resuit.data;
     }
 
