@@ -198,6 +198,10 @@
         padding: 10px 40px;
         max-width: 1280px;
         flex-basis: 1280px;
+        @media screen and (max-width: 610px) {
+            padding: 10px 0px;
+        }
+
         .communicate_information{
             flex-grow: 1;
             display: flex;
