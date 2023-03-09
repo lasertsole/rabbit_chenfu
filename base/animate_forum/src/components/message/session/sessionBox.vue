@@ -75,6 +75,10 @@
             max-width: calc(100% - 133px);
             white-space: normal;
             word-break: break-all;
+
+            @media screen and (max-width: 610px) {
+                max-width: 100%;
+            }
         }
     }
     .reverse{
@@ -93,6 +97,9 @@
             margin-right: 16px;
             background-color:cyan;
             direction:ltr;
+            @media screen and (max-width: 610px) {
+                max-width: 100%;
+            }
         }
     }
 </style>

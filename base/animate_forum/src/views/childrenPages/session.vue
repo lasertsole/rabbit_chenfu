@@ -316,6 +316,10 @@
                         @media screen and (max-width: 610px) {
                             max-width: 70px;
                         }
+
+                        @media screen and (max-width: 500px) {
+                            display: none;
+                        }
                     }
                 }
             }
