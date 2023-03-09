@@ -1,9 +1,11 @@
 <template>
-    <el-popover class="tabbar"
+    <el-popover popper-class="tabbarBox"
         v-for="(item, index) in linkArr"
         placement="bottom"
         :width="100"
         trigger="hover"
+        :show-after="0"
+        :hide-after="0"
     >
         <ul>
             <li v-for="(childItem, childIndex) in item.childLinkArr">

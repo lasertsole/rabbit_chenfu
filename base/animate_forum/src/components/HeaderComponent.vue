@@ -1,9 +1,7 @@
 <template>
     <div class="header">
         <!-- 左侧logo -->
-        <div class="logo">
-            <h2>沉浮兔</h2>
-        </div>
+        <router-link :to="'/index'" class="logo" ></router-link>
         <!-- 主菜单 -->
         <div class="header-menu" :class="{'header-menu-change-search':isChangeSearch}">
             <tabbar :linkArr="linkArr"></tabbar>
@@ -67,22 +65,23 @@
         }
         
         .logo{
-            width: 96px;
-            height: 30px;
-            margin-right: 110px;
+            display: block;
+            $logoEdge: 58px;
+            min-width: $logoEdge;
+            max-width: $logoEdge;
+            min-height: $logoEdge;
+            max-height: $logoEdge;
+            margin: 0px 20px 0px 90px;
             display: flex;
             flex-direction: row;
             align-items: center;
-
+            background-image: url("/icons/logo.png");
+            background-position: center center;
+            $backgroundEdge: $logoEdge*2.1;
+            background-size: $backgroundEdge $backgroundEdge;
+            
             @media screen and (max-width: 945px) {
                 display: none;
-            }
-
-            h2{
-                background-image: linear-gradient(#7a42ff, #42c7fb);
-                background-clip: text;
-                -webkit-background-clip: text;
-                color: transparent;
             }
         }
 
