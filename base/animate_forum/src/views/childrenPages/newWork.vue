@@ -130,12 +130,15 @@
 
 <style lang="scss" scoped>
     .recomment{
+        width: 100%;
         min-height: 100%;
         padding: 20px 40px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        box-sizing: border-box;
+        max-width: 1280px;
+        flex-basis: 1280px;
     }
 
     .uploadBox{

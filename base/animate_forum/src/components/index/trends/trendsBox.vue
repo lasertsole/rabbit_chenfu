@@ -105,9 +105,10 @@
         margin-bottom: 10px;
         .user_info{
             display: flex;
-            flex-basis: 60px;
-            min-height: 60px;
-            max-height: 60px;
+            $userInfoEdge: 60px;
+            flex-basis: $userInfoEdge;
+            min-height: $userInfoEdge;
+            max-height: $userInfoEdge;
             justify-content: space-between;
             align-items: center;
             .user_header{
@@ -116,9 +117,10 @@
                 align-items: center;
                 justify-content: flex-start;
                 .user_profile{
+                    $profileEdge: 50px;
                     border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
+                    width: $profileEdge;
+                    height: $profileEdge;
                 }
 
                 .user_name{
@@ -156,8 +158,9 @@
             margin-top: 20px;
             .left{
                 border-radius: 8px;
-                max-width: 680px;
-                min-width: 680px;
+                $LeftBoxWidth: 680px;
+                max-width: $LeftBoxWidth;
+                min-width: $LeftBoxWidth;
                 box-sizing: border-box;
                 background-color: white;
                 margin-right: 20px;
@@ -176,8 +179,9 @@
             .right{
                 border-radius: 8px;
                 padding: 19px;
-                max-width: 300px;
-                min-width: 300px;
+                $rightWidth: 300px;
+                max-width: $rightWidth;
+                min-width: $rightWidth;
                 height: 220px;
                 box-sizing: border-box;
                 background-color: white;
@@ -186,16 +190,16 @@
                 flex-direction: column;
                 align-items: center;
                 img{
-                    min-width: 88px;
-                    min-height: 88px;
-                    max-width: 88px;
-                    max-height: 88px;
+                    $profileWidth: 88px;
+                    min-width: $profileWidth;
+                    min-height: $profileWidth;
+                    max-width: $profileWidth;
+                    max-height: $profileWidth;
                     border-radius: 50%;
                     overflow: hidden;
                 }
                 .author_name{
                     height: 38px;
-                    width: 100%;
                     margin-top: 10px;
                     color: #1a1a1a;
                     font-size: 16px;
@@ -224,8 +228,9 @@
                     align-items: center;
                     font-size: 14px;
                     svg{
-                        width: 16px;
-                        height: 16px;
+                        $iconEdge: 16px;
+                        width: $iconEdge;
+                        height: $iconEdge;
                         margin-right: 3px;
                     }
                     &:hover{
@@ -242,10 +247,12 @@
                     margin-right: 0px;
                 }
                 .right{
-                    max-width: 680px;
-                    min-width: 680px;
-                    max-height: 150px;
-                    min-height: 150px;
+                    $rightWidth: 680px;
+                    $rightHeight: 150px;
+                    max-width: $rightWidth;
+                    min-width: $rightWidth;
+                    max-height: $rightHeight;
+                    min-height: $rightHeight;
                     flex-direction: row;
                     justify-content: flex-start;
                     align-items: flex-start;
@@ -267,16 +274,19 @@
             @media screen and (max-width: 700px) {
                 
                 .left{
+                    $leftWidth: 460px;
                     margin-top: 20px;
                     margin-right: 0px;
-                    max-width: 460px;
-                    min-width: 460px;
+                    max-width: $leftWidth;
+                    min-width: $leftWidth;
                 }
                 .right{
-                    max-width: 460px;
-                    min-width: 460px;
-                    max-height: 150px;
-                    min-height: 150px;
+                    $rightWidth: 460px;
+                    $rightHeight: 150px;
+                    max-width: $rightWidth;
+                    min-width: $rightWidth;
+                    max-height: $rightHeight;
+                    min-height: $rightHeight;
                     flex-direction: row;
                 }
             }

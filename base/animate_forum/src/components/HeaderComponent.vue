@@ -6,23 +6,39 @@
         </div>
         <!-- 主菜单 -->
         <div class="header-menu" :class="{'header-menu-change-search':isChangeSearch}">
-            <router-link  active-class="active" to="/index">首页</router-link>
-            <router-link  active-class="active" to="/Reservation">约稿</router-link>
-            <router-link  active-class="active" to="/message">消息</router-link>
-            <router-link  active-class="active" to="/Person">我的</router-link>
+            <tabbar :linkArr="linkArr"></tabbar>
         </div>
         <!-- 搜索框 -->
         <searchBar :isChangeSearch="isChangeSearch" @changeStyle="changeStyle"></searchBar>
         <!-- 头像 -->
         <userMenu></userMenu>
     </div>
-
 </template>
 
 <script setup>
     import { ref } from 'vue'
-    import searchBar from './frameComponents/searchBar.vue'
-    import userMenu from "./frameComponents/userMenu.vue"
+    import userMenu from "./frameComponents/userMenu.vue";
+    import tabbar from './frameComponents/tabbar.vue';
+    import searchBar from './frameComponents/searchBar.vue';
+
+    /****************************tabbar配置****************************/
+    const linkArr = ref([
+        {name:"首页", linkTo:"/index",childLinkArr:[
+            {name:'新作品', linkTo:'/index/newWork'},
+            {name:'动态', linkTo:'/index/trends'}
+        ]},
+        {name:"约稿", linkTo:"/Reservation",childLinkArr:[
+            {name:'橱窗', linkTo:'/Reservation/showcase'},
+            {name:'需求贴', linkTo:'/Reservation/require'}
+        ]},
+        {name:"消息", linkTo:"/message",childLinkArr:[
+            {name:'会话', linkTo:'/message/session'},
+            {name:'公告', linkTo:'/message/announcement'}
+        ]},
+        {name:"我的", linkTo:"/Person",childLinkArr:[
+            {name:'管理', linkTo:'/Person/manager'},
+        ]},
+    ]);
 
     /****************************点击搜索框展开功能****************************/
     const isChangeSearch= ref(false);
@@ -77,21 +93,6 @@
             justify-content: flex-start;
             flex-direction: row;
             margin-left: 5px;
-            a{
-                padding: 20px 30px;
-                text-decoration: none;
-                color: #96A4A9;
-                border-bottom: 2px solid transparent;
-                transition: 0.3s;
-                @media screen and (max-width: 610px) {
-                    display: none;
-                }
-
-                &.active{
-                    color: #ffffff;
-                    border-bottom: 2px solid #ffffff;
-                }
-            }
         }
 
         /*输入框聚焦后，样式改变 */
@@ -99,5 +100,4 @@
             display: none;
         }
     }
-    
 </style>

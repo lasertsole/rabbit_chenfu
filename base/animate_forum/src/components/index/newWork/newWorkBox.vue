@@ -154,9 +154,10 @@
                 flex-direction: row;
                 align-items: center;
                 .author_profile{
+                    $profileEdge: 33px;
                     margin: 7px 7px;
-                    width: 33px;
-                    height: 33px;
+                    width: $profileEdge;
+                    height: $profileEdge;
                     border-radius: 50%;
                 }
 
@@ -170,8 +171,9 @@
                 flex-direction: row;
                 align-items: center;
                 .heart{
-                    width: 20px;
-                    height: 20px;
+                    $heartEdge: 20px;
+                    width: $heartEdge;
+                    height: $heartEdge;
                     margin-right: 5px;
                 }
                 .appoint{
@@ -196,8 +198,9 @@
             margin-top: 20px;
             .left{
                 border-radius: 8px;
-                max-width: 680px;
-                min-width: 680px;
+                $LeftWidth: 680px;
+                max-width: $LeftWidth;
+                min-width: $LeftWidth;
                 box-sizing: border-box;
                 background-color: white;
                 margin-right: 20px;
@@ -246,10 +249,11 @@
                 flex-direction: column;
                 align-items: center;
                 img{
-                    min-width: 88px;
-                    min-height: 88px;
-                    max-width: 88px;
-                    max-height: 88px;
+                    $profileEdge: 88px;
+                    min-width: $profileEdge;
+                    min-height: $profileEdge;
+                    max-width: $profileEdge;
+                    max-height: $profileEdge;
                     border-radius: 50%;
                     overflow: hidden;
                 }

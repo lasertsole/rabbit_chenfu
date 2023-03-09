@@ -10,12 +10,6 @@
         <div class="page-content">
             <router-view></router-view>
         </div>
-
-        <!-- 功能分页 屏幕宽度介于610px到945px之间显示-->
-        <div class="page-bottom-menu">
-            <router-link  active-class="active" to="/message/session">会话</router-link>
-            <router-link  active-class="active" to="/message/announcement">公告</router-link>
-        </div>
     </div>
 </template>
 
@@ -65,6 +59,10 @@
         &-content{
             flex-grow: 1;
             overflow: hidden;
+            display: flex;
+            overflow-y: scroll;
+            flex-direction: row;
+            justify-content: center;
         }
 
         &-bottom-menu{
@@ -73,12 +71,6 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            @media screen and (min-width: 945px)  {
-                display: none;
-            }
-            @media screen and (max-width: 610px) {
-                display: none;
-            }
 
             a{
                 display: block;
@@ -93,5 +85,16 @@
                 }
             }
         }
+    }
+
+    ::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 10px;
+        background: -webkit-linear-gradient(top,  #716ff3 0%,rgb(240, 210, 103) 100%);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: -webkit-linear-gradient(top,  #6f6df1 0%,rgba(83, 237, 142, 0) 100%);
     }
 </style>

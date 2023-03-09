@@ -9,11 +9,6 @@
         <div class="page-content">
             <router-view></router-view>
         </div>
-
-        <!-- 功能分页 屏幕宽度介于610px到945px之间显示-->
-        <div class="page-bottom-menu">
-            <router-link  active-class="active" to="/Person/manager">管理</router-link>
-        </div>
     </div>
 </template>
 
@@ -64,6 +59,9 @@
         &-content{
             flex-grow: 1;
             overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
         }
 
         &-bottom-menu{
@@ -72,12 +70,6 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            @media screen and (min-width: 945px)  {
-                display: none;
-            }
-            @media screen and (max-width: 610px) {
-                display: none;
-            }
 
             a{
                 display: block;

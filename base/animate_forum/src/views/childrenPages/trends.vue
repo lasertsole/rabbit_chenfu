@@ -117,6 +117,10 @@
 <style lang="scss" scoped>
     .following{
         padding: 20px 40px;
+        box-sizing: border-box;
+        max-width: 1280px;
+        flex-basis: 1280px;
+
         img{
             display: none;
             width: 100%;

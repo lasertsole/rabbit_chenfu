@@ -234,14 +234,15 @@
         display: flex;
         flex-direction: row;
         margin-left: 40px;
-        width: 32px;
-        height: 32px;
+        $profileEdge: 32px;//头像长宽
+        width: $profileEdge;
+        height: $profileEdge;
         cursor: pointer;
         img{
             border: 2px solid #f9fafb;
             box-sizing: border-box;
-            width: 32px;
-            height: 32px;
+            width: $profileEdge;
+            height: $profileEdge;
             object-fit: fill;
             border-radius: 50%;
         }
@@ -266,8 +267,9 @@
                 img{
                     width: 100%;
                     height: 100%;
-                    width: 178px;
-                    height: 178px;
+                    $profileEdge: 178px;//头像长宽
+                    width: $profileEdge;
+                    height: $profileEdge;
                     border-radius: 50%;
                 }
             }

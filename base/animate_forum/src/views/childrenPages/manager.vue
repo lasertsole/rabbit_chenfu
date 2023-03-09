@@ -23,7 +23,6 @@
             </managerBox>
         </section>
     </div>
-
 </template>
 
 <script setup>
@@ -61,11 +60,11 @@
         padding: 10px;
         height: 100%;
         width: 100%;
-        max-width:100%;
+        max-width: 1280px;
+        padding: 0px 40px;
         box-sizing: border-box;
         overflow: hidden;
-        .user_info{
-            flex-basis: 100px;
+        .user_info{ 
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -102,7 +101,7 @@
             justify-content: space-between;
             align-items: flex-start;
             padding: 10px;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
     }
     ::-webkit-scrollbar {

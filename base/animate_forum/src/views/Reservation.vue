@@ -10,12 +10,6 @@
         <div class="page-content">
             <router-view></router-view>
         </div>
-
-        <!-- 功能分页 屏幕宽度介于610px到945px之间显示-->
-        <div class="page-bottom-menu">
-            <router-link  active-class="active" to="/Reservation/showcase">橱窗</router-link>
-            <router-link  active-class="active" to="/Reservation/require">需求贴</router-link>
-        </div>
     </div>
 </template>
 
@@ -28,6 +22,7 @@
         flex-direction: column;
         width: 100%;
         height: 100%;
+        
 
         &-menu{
             margin-top: 10px;
@@ -64,7 +59,10 @@
 
         &-content{
             flex-grow: 1;
-            overflow-y: scroll; 
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
         }
 
         &-bottom-menu{
@@ -73,12 +71,6 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            @media screen and (min-width: 945px)  {
-                display: none;
-            }
-            @media screen and (max-width: 610px) {
-                display: none;
-            }
 
             a{
                 display: block;

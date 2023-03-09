@@ -59,12 +59,13 @@
     .announcement{
         display: flex;
         flex-direction: column;
-        padding: 20px 20px;
+        padding: 20px 40px;
         width: 100%;
         max-width: 100%;
         height: 100%;
         box-sizing: border-box;
-        overflow-y: scroll;
+        max-width: 1280px;
+        flex-basis: 1280px;
     }
 
     ::-webkit-scrollbar {

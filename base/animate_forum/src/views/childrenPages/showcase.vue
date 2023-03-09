@@ -128,6 +128,9 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
+        box-sizing: border-box;
+        max-width: 1280px;
+        flex-basis: 1280px;
     }
 
     .uploadBox{

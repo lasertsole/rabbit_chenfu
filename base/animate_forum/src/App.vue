@@ -1,26 +1,17 @@
-<script setup>
-  import HeaderComponent from "/src/components/HeaderComponent.vue"
-  import LeftComponent from "/src/components/LeftComponent.vue"
-  import BottomComponent from "/src/components/BottomComponent.vue"
-</script>
-
 <template>
-
   <div class="main">
-
     <HeaderComponent></HeaderComponent>
     <div class="wrapper">
-
-      <LeftComponent></LeftComponent>
-
       <router-view></router-view>
-
     </div>
-
     <BottomComponent></BottomComponent>
   </div>
-
 </template>
+
+<script setup>
+  import HeaderComponent from "/src/components/HeaderComponent.vue"
+  import BottomComponent from "/src/components/BottomComponent.vue"
+</script>
 
 <style lang="scss" scoped>
   .main{

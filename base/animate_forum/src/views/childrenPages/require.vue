@@ -180,6 +180,9 @@
 <style lang="scss" scoped>
     .require{
         padding: 20px 40px;
+        box-sizing: border-box;
+        max-width: 1280px;
+        flex-basis: 1280px;
     }
 
     .uploadBox{

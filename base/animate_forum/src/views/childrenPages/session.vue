@@ -2,24 +2,20 @@
     <div class="session">
 
         <div class="communicate_information">
-            <div class="communicate_log">
+            <div ref="communicate_log" class="communicate_log">
                 <template v-for="item in AllChatLog">
                     <sessionBox  v-if="item.id==uniqueContactsArr[indexContacts]" :isMe="item.isMe" :content="item.content" :profile="item.isMe?global.ServerPath+userinfo.profile:global.ServerPath+personList[indexContacts].profile"></sessionBox>
                 </template>
             </div>
             <textarea v-model="unSubmit_content" class="unSubmit_content" @keyup.enter="SubmitChat"></textarea>
-            <el-button style="position:absolute; bottom:10px; right:25px" type="primary" round @click="SubmitChat">发送</el-button>
+            <el-button class="submitButton" type="primary" round @click="SubmitChat">发送</el-button>
         </div>
 
         <div class="contacts">
             <el-scrollbar>
                 <p v-for="(item, index) in personList" :key="item" class="scrollbar-demo-item" @click="indexContacts=index">
                     <div class="profile_box">
-                        <el-image class="profile"
-                            :lazy="lazyLoad"
-                            :src="global.ServerPath+item.profile"
-                            scroll-container=".page-content"
-                        />
+                        <img class="profile" :src="global.ServerPath+item.profile"/>
                     </div>
                     <div class="info">
                         <div class="user_name">{{item.username}}</div>
@@ -37,7 +33,7 @@
     import useGlobal from "/src/global";
     import { useRoute, useRouter } from "vue-router";
     import { ElMessage } from 'element-plus';
-    import { onMounted, onUnmounted, ref } from "vue";
+    import { onMounted, onUnmounted, ref, nextTick  } from "vue";
     import sessionBox from "/src/components/message/session/sessionBox.vue";
     
     const global = useGlobal();//引入全局变量
@@ -103,11 +99,18 @@
         /******左侧聊天具体内容******/
             uniqueContactsArr.value=tempArr;//获取去重联系人列表
             AllChatLog.value=tempDetailArr;//获取所有聊天记录(包含指向)
+        
+        /******判断聊天内容是否更新，更新时划到底部******/
+            if(AllChatLogLength.value!=AllChatLog.value.length){
+                AllChatLogLength.value=AllChatLog.value.length;
+                nextTick(()=>{scrollToBottom()});//nextTick确保scrollToBottom()在聊天框总长度更新完之后才执行
+            }
         }
     }
     
     const unSubmit_content = ref("");//输入框内容
     async function SubmitChat(){//提交聊天内容
+        unSubmit_content.value=unSubmit_content.value.replace(/\n$/,"");//去掉回车发送时字符串后面的回车符
         if(unSubmit_content.value!=""){
             let result = await axios.post('http://localhost:8000/SubmitChat', { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value], content:unSubmit_content.value });
             if(result.data.error){ElMessage.error("发送失败");}
@@ -115,6 +118,13 @@
         }
         else{ElMessage('请先输入内容');}
     }
+
+    const communicate_log = ref();//获取聊天框原生元素
+    const AllChatLogLength = ref(AllChatLog.value.length);//用AllChatLog的长度判断聊天内容是否更新
+    function scrollToBottom(){//聊天框滑动到底部
+        communicate_log.value.scrollTop=communicate_log.value.scrollHeight;
+    }
+    
     /****************************路由传参****************************/
     const route = useRoute();
     async function receiveDm(){
@@ -185,7 +195,9 @@
         max-width:100%;
         box-sizing: border-box;
         overflow: hidden;
-        padding: 10px;
+        padding: 10px 40px;
+        max-width: 1280px;
+        flex-basis: 1280px;
         .communicate_information{
             flex-grow: 1;
             display: flex;
@@ -201,7 +213,7 @@
                 border: 1px solid white;
                 box-shadow: inset 2px 2px 2px 2px rgb(255 255 255 / 50%), 7px 7px 20px 0px rgb(0 0 0 / 10%), 4px 4px 5px 0px rgb(0 0 0 / 10%);
                 color: white;
-                overflow-y: scroll;
+                overflow-y: auto;
             }
 
             .unSubmit_content{
@@ -215,6 +227,15 @@
                 outline: none;
                 box-shadow: inset 2px 2px 2px 2px rgb(255 255 255 / 50%), 7px 7px 20px 0px rgb(0 0 0 / 10%), 4px 4px 5px 0px rgb(0 0 0 / 10%);
                 color: white;
+            }
+
+            .submitButton{
+                position:absolute;
+                bottom:10px;
+                right:25px;
+                @media screen and (max-height: 325px) {
+                    display: none;
+                }
             }
         }
         .contacts{
