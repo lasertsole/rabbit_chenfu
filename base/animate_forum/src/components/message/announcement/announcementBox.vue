@@ -19,7 +19,7 @@
         <div class="announcementBox">
             <div class="title">
                 <span>{{title}}</span>
-                <img @click="clickHideModel" class="close" src="/src/assets/icons/close.svg">
+                <img @click="clickHideModel" class="close" src="/icons/close.svg">
             </div>
             <div class="publisher_time">{{publisher_time.substring(0,10)+" "+publisher_time.substring(11,19)}}</div>
             <div class="content">{{content}}</div>

@@ -83,7 +83,7 @@
             })
             tempArr = Array.from(new Set(tempArr))//联系人去重2 使用set函数去重
 
-            result = await axios.post('http://localhost:8000/getPersonList',{personList:tempArr});//请求回每个联系人的头像、名字和id信息
+            result = await axios.post(global.ServerPath+'/getPersonList',{personList:tempArr});//请求回每个联系人的头像、名字和id信息
 
             result.data=result.data.map((item)=>{
                 let temp=0;
@@ -112,7 +112,7 @@
     async function SubmitChat(){//提交聊天内容
         unSubmit_content.value=unSubmit_content.value.replace(/\n$/,"");//去掉回车发送时字符串后面的回车符
         if(unSubmit_content.value!=""){
-            let result = await axios.post('http://localhost:8000/SubmitChat', { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value], content:unSubmit_content.value });
+            let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value], content:unSubmit_content.value });
             if(result.data.error){ElMessage.error("发送失败");}
             else{unSubmit_content.value="";sentRequire();}
         }
@@ -133,7 +133,7 @@
                 ElMessage.error("你不能给自己私信");
             }
             else if(uniqueContactsArr.value.indexOf(route.query.target_id)<0){//私信的人不在列表中
-                let result = await axios.post('http://localhost:8000/SubmitChat', { source_id:route.query.target_id, target_id:userinfo.value.id, content:"现在开始私聊吧~" });
+                let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:route.query.target_id, target_id:userinfo.value.id, content:"现在开始私聊吧~" });
                 if(result.data.error){ElMessage.error("发送失败");}
                 else{sentRequire();}
             }
