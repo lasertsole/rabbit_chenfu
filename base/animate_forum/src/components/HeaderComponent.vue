@@ -1,7 +1,10 @@
 <template>
     <div class="header">
         <!-- 左侧logo -->
-        <router-link :to="'/index'" class="logo" ></router-link>
+        <router-link :to="'/index'" class="logo">
+            <h2>沉浮兔</h2>
+            <div></div>
+        </router-link>
         <!-- 主菜单 -->
         <div class="header-menu" :class="{'header-menu-change-search':isChangeSearch}">
             <tabbar :linkArr="linkArr"></tabbar>
@@ -65,21 +68,34 @@
         }
         
         .logo{
-            display: block;
-            $logoEdge: 58px;
-            min-width: $logoEdge;
-            max-width: $logoEdge;
-            min-height: $logoEdge;
-            max-height: $logoEdge;
-            margin: 0px 20px 0px 90px;
             display: flex;
             flex-direction: row;
             align-items: center;
-            background-image: url("/icons/logo.png");
-            background-position: center center;
-            $backgroundEdge: $logoEdge*2.1;
-            background-size: $backgroundEdge $backgroundEdge;
-            
+            h2{
+                color: white;
+                margin-left: 80px;
+                font-family: 楷体;
+                font-weight: bolder;
+                font-size: 30px;
+            }
+
+            div{
+                $logoEdge: 58px;
+                min-width: $logoEdge;
+                max-width: $logoEdge;
+                min-height: $logoEdge;
+                max-height: $logoEdge;
+                margin: 0px 20px 0px 10px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                background-image: url("/icons/logo.png");
+                background-position: center 124px;
+                $backgroundEdge: $logoEdge*3.0;
+                background-size: $backgroundEdge $backgroundEdge;
+                overflow: hidden;
+            }
+
             @media screen and (max-width: 945px) {
                 display: none;
             }

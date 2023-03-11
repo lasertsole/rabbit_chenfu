@@ -15,7 +15,7 @@
     </div>
 
     <el-dialog class="uploadBox"
-        style="width: 800px; padding: 30px 56px; border-radius: 10px;"
+        style="width: 800px; padding: 30px 56px; border-radius: 10px; box-shadow: 5px 5px 30px 1px #00AEEC;"
         v-model="showUploadModel"
         :show-close="true">
         <!-- 模态框头部 -->

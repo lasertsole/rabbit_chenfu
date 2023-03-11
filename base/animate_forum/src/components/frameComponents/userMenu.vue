@@ -20,7 +20,7 @@
 
     <!-- 登录模态框 -->
     <el-dialog
-        style="width: 400px;padding: 30px 56px" v-model="modelShow"
+        style="width: 400px;padding: 30px 56px; box-shadow: 5px 5px 30px 1px #00AEEC; border-radius: 10px;" v-model="modelShow"
         :show-close="true"
         :append-to-body="true">
         <!-- 模态框头部 -->
@@ -47,8 +47,8 @@
     </el-dialog>
 
     <!-- 设置模态框 -->
-    <el-dialog
-        style="width: 400px; padding: 30px 56px; border-radius: 10px;"
+    <el-dialog class="resetUserInformation"
+        style="width: 400px; padding: 30px 56px; border-radius: 10px; box-shadow: 5px 5px 30px 1px #00AEEC;"
         v-model="resetShow"
         :show-close="true"
         :append-to-body="true">
@@ -56,6 +56,7 @@
         <template #header="{ close, titleId, titleClass }">
             <div class="my-header">
                 <div class="user_profile">
+                    <h2>修改用户头像</h2>
                     <uploadProfile
                         :profile="userinfo?global.ServerPath+userinfo.profile:global.ServerPath+'/files/anonymous.svg'"
                         :action="global.ServerPath+'/submitUserProfile'"
@@ -65,8 +66,11 @@
             </div>
         </template>
         <!-- 模态框内容 -->
-        <div class="reset">
-            <input type="text" placeholder="请输入新名字,回车确定" v-model="tempNewName" @keyup.enter="submitName" maxlength="32"/>
+        <div class="body">
+            <h2>修改用户名称</h2>
+            <div class="reset">
+                <input type="text" placeholder="请输入新名字,回车确定" v-model="tempNewName" @keyup.enter="submitName" maxlength="32"/>
+            </div>
         </div>
     </el-dialog>
 
@@ -262,8 +266,14 @@
         .my-header{
             .user_profile{
                 display: flex;
+                flex-direction: column;
                 justify-content: center;
+                align-items: center;
                 margin-left: 16px;
+                h2{
+                    margin-bottom: 10px;
+                }
+
                 img{
                     width: 100%;
                     height: 100%;
@@ -276,18 +286,28 @@
         }
 
         &__body{
-            padding: 0;
-            .reset{
-                height: 30px;
-                input{
-                    height: 100%;
-                    width: 100%;
-                    outline: none;
-                    text-indent: 10px;
-                    border: 2px solid #00AEEC;
-                    border-radius: 8px;
-                    &::placeholder{
-                        color: #00AEEC;
+            .body{
+                h2{
+                    margin-bottom: 10px;
+                    text-align: center;
+                    color: #213547;
+                    font-size: 24px;
+                }
+                .reset{
+                    height: 30px;
+                    flex-direction: column;
+                    align-items: center;
+
+                    input{
+                        height: 100%;
+                        width: 100%;
+                        outline: none;
+                        text-indent: 10px;
+                        border: 2px solid #00AEEC;
+                        border-radius: 8px;
+                        &::placeholder{
+                            color: #00AEEC;
+                        }
                     }
                 }
             }
@@ -296,4 +316,9 @@
     
 </style>
 <style lang="scss">
+    .resetUserInformation{
+        .el-dialog__body{
+            padding: 10px 0px 20px;
+        }
+    }
 </style>
