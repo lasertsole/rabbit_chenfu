@@ -5,7 +5,9 @@
                 <newWorkBox
                     :item="item"
                     :url="url"
-                    :index="index">
+                    :index="index"
+
+                    :likeStatusArr="likeStatusArr">
                 </newWorkBox>
             </template>
         </Waterfall>
@@ -41,8 +43,8 @@
     import newWorkUpload from '/src/components/index/newWork/newWorkUploadBox.vue';
 
     const global = useGlobal();
-    const tempStore = global.TempPinia;
-    const { userinfo } = storeToRefs(tempStore);
+    const store = global.Pinia;
+    const { userinfo } = storeToRefs(store);
     const imgsArr = ref([]);
     
 
@@ -54,6 +56,13 @@
             tempArr.push({src:global.ServerPath+item.works, works_describe:item.works_describe, author_profile:global.ServerPath+item.author_profile, author_name:item.author_name, appoint:item.appoint, author_id:item.author_id, work_id:item.work_id});
         });
         imgsArr.value=tempArr;
+    }
+
+    const likeStatusArr = ref([]);//点赞列表
+    async function getLikeStatusArr(){//请求点赞列表
+        let result = await axios.get(global.ServerPath+'/getLikeStatusArr');
+        if(!result.data.error){likeStatusArr.value=result.data;}
+        else{ElMessage.error("请求点赞列表失败");}
     }
 
     const upload = ref();//获取upload节点
@@ -88,7 +97,8 @@
     
     /****************************Bus监听函数****************************/
     const Bus = global.Bus;//从全局属性里获取事件总线
-    async function searchEvent(searchContent){
+
+    async function searchEvent(searchContent){//搜索事件
         let result = await axios.get(global.ServerPath+"/searchNewWorkBox",{params:{searchContent}});
         if(!result.data.error){
             imgsArr.value=[];
@@ -103,6 +113,10 @@
         }
     }
 
+    function userLoginOrOut(){//用户上下线事件
+        getLikeStatusArr();
+    }
+
     /****************************路由传参****************************/
     const route = useRoute()
 
@@ -113,17 +127,21 @@
         }
     }
 
-
     /****************************挂载触发****************************/
     onMounted(()=>{
         sentRequire();
+        getLikeStatusArr();
         Bus.on("searchEvent", searchEvent);
+        global.Bus.on("login", userLoginOrOut);
+        global.Bus.on("logout", userLoginOrOut);
         uploadInformation();
     });
 
     /****************************卸载解绑****************************/
     onUnmounted(()=>{
         Bus.off("searchEvent", searchEvent);
+        global.Bus.off("login", userLoginOrOut);
+        global.Bus.off("logout", userLoginOrOut);
     })
 
 </script>

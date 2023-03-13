@@ -58,7 +58,7 @@
                 <div class="user_profile">
                     <h2>修改用户头像</h2>
                     <uploadProfile
-                        :profile="userinfo?global.ServerPath+userinfo.profile:global.ServerPath+'/files/anonymous.svg'"
+                        :profile="userinfo?global.ServerPath+userinfo.profile:'/icons/anonymous.svg'"
                         :action="global.ServerPath+'/submitUserProfile'"
                         @changeProfile="changeProfile"
                     ></uploadProfile>
@@ -82,14 +82,11 @@
     import useGlobal from "/src/global"
     import { storeToRefs } from 'pinia'
     import { ElMessage } from 'element-plus'
-    import uploadProfile from '/src/components/uploadProfile.vue'
-
+    import uploadProfile from '/src/components/frameComponents/uploadProfile.vue'
 
     /****************************显示头像功能****************************/
     const global=useGlobal();//引入全局变量
     const store=global.Pinia;//引入持久化存储
-    const tempStore=global.TempPinia;//引入临时性存储
-
 
     /****************************右上角用户界面关闭与否****************************/
     const visible=ref(false);
@@ -100,8 +97,8 @@
 
 
     /****************************登录功能****************************/
-    const {userinfo}=storeToRefs(tempStore);//用户登录后获得的用户信息
     const {token}=storeToRefs(store);//用户登录后获得的令牌
+    const {userinfo}=storeToRefs(store);//用户登录后获得的用户信息
     const modernChange=ref(true);//更换登录或注册模式
     const inputPhone=ref("");//输入框手机号码
     const inputPassword=ref("");//输入框密码
@@ -136,8 +133,7 @@
             if(!res.data.error){
                 ElMessage.success('注册成功');
                 modelShow.value=!modelShow.value;
-                token.value=res.data.token;
-                userinfo.value={username:res.data.username, profile:res.data.profile, id:res.data.id};
+                store.setAccount(res.data.token,{username:res.data.username, profile:res.data.profile, id:res.data.id});
             }
             else{
                 ElMessage.error('手机号已被注册,注册失败');
@@ -149,8 +145,7 @@
             if(!res.data.error){
                 ElMessage.success('登录成功');
                 modelShow.value=!modelShow.value;
-                token.value=res.data.token;
-                userinfo.value={username:res.data.username, profile:res.data.profile, id:res.data.id};
+                store.setAccount(res.data.token,{username:res.data.username, profile:res.data.profile, id:res.data.id});
 
                 global.Bus.emit("login","");//广播用户上线通知
             }
@@ -167,15 +162,13 @@
         let res = await axios.get(global.ServerPath+'/fasterLogin');
         if(!res.data.error){
             ElMessage.success('登录成功');
-            token.value=res.data.token;
-            userinfo.value={username:res.data.username, profile:res.data.profile, id:res.data.id};
+            store.setAccount(res.data.token,{username:res.data.username, profile:res.data.profile, id:res.data.id});
 
             global.Bus.emit("login","");//广播用户上线通知
         }
         else if(token.value){
             ElMessage.error("token过期，请重新登录");
-            token.value=undefined;
-            userinfo.value=undefined;
+            store.removeAccount();
         }
     }
 
@@ -183,8 +176,7 @@
     /****************************登出****************************/
     function logout(){//登出方法
         visible.value=false;
-        userinfo.value=undefined;
-        token.value=undefined;
+        store.removeAccount();
         document.querySelector(".profile-img").src=global.ServerPath+"/files/anonymous.svg";
 
         global.Bus.emit("logout","");//广播用户下线通知

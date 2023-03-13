@@ -67,10 +67,8 @@
 
     const props = defineProps({user_profile:String, submited_time:String, user_name:String, user_recommend:String, author_id:String, imageArr:String});//从父组件传值到本组件
     const global = useGlobal();
-    const tempStore = global.TempPinia;
     const store = global.Pinia;
-    const { userinfo } = storeToRefs(tempStore);
-    const { token } = storeToRefs(store);
+    const { userinfo } = storeToRefs(store);
 
     /**控制模态框显现与否**/
     const showModel = ref(false);

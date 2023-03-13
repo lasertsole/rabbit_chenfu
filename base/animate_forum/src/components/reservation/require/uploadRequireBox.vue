@@ -26,8 +26,8 @@
     import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 
     const global = useGlobal();//获取全局变量
-    const tempStore = global.TempPinia;
-    const { userinfo } = storeToRefs(tempStore);
+    const store = global.Pinia;
+    const { userinfo } = storeToRefs(store);
 
     const props = defineProps({action:String, title:String, describe:String, money:String, tag:String, calendar:Date});
     const emits = defineEmits(["submitImageSuccess"]);

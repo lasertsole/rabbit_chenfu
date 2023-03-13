@@ -7,7 +7,7 @@ import router from './router'
 
 //引入pinia持久化存储和临时性存储
 import store from './stores'
-import {useTempStore, useMainStore}  from "./stores/main.js"
+import { useMainStore }  from "./stores/main.js"
 
 //引入Element-Plus
 import ElementPlus from 'element-plus'
@@ -29,7 +29,6 @@ app.use(ElementPlus);
 //将pinia存储的数据全局化
 let mainStore = useMainStore();
 app.config.globalProperties.Pinia = mainStore;
-app.config.globalProperties.TempPinia = useTempStore();
 //事件总线全局化
 app.config.globalProperties.Bus = new mitt();
 //服务器地址与端口全局化

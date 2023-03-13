@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require('cors')
 const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName, getInfoByID} = require("./services/account.js")
 
-const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatus, changeLike, searchNewWorkBox} = require("./services/newWork.js")
+const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr, changeLike, searchNewWorkBox} = require("./services/newWork.js")
 const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
 
 const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox} = require("./services/showcase.js")
@@ -52,7 +52,7 @@ app.post('/getInfoByID', getInfoByID);//根据ID获取个人信息
 app.get("/getnewWorkBox", getnewWorkBox)//获取新作品盒子方法
 app.post("/submitnewWorkBoxImage", submitnewWorkBoxImage)//用户上传新作品盒子的图片
 app.post("/submitnewWorkBox", submitnewWorkBox)//用户上传新作品盒子
-app.post("/getLikeStatus", getLikeStatus)//改变点赞状态
+app.get("/getLikeStatusArr", getLikeStatusArr)//改变点赞列表
 app.post("/changeLike", changeLike)//改变点赞状态
 app.get("/searchNewWorkBox", searchNewWorkBox)//搜索新作品盒子
 

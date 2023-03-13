@@ -1,4 +1,4 @@
-<template>
+<template>userinfo?.id
     <div class="newWorkBox"
         @click="clickShowModel">
         <LazyImg :url="url"/>
@@ -15,10 +15,10 @@
             <span class="right">
                 <el-image class="heart"
                     scroll-container=".page-content"
-                    :src="hadLike?'/icons/fulledHeart.svg':'/icons/followHeart.svg'"
+                    :src="userinfo&&props.likeStatusArr.indexOf(props.item.work_id)>=0?'/icons/fulledHeart.svg':'/icons/followHeart.svg'"
                     :lazy="lazyLoad"
                     :key="index"/>
-                <span class="appoint">{{likeCount}}</span>
+                <span class="appoint">{{item.appoint}}</span>
             </span>
         </p>
     </div>
@@ -37,8 +37,8 @@
                 <p><el-image :key="index" fit="fill" :src="url" :preview-src-list="[url]"/></p>
                 <p class="author_recomment">{{item.works_describe}}</p>
                 <p class="follow">
-                    <img @click="changeLike" class="heart" :src="hadLike?'/icons/fulledHeart.svg':'/icons/followHeart.svg'"/>
-                    <span class="appoint">喜欢{{likeCount}}</span>
+                    <img @click="changeLike" class="heart" :src="userinfo&&props.likeStatusArr.indexOf(props.item.work_id)>=0?'/icons/fulledHeart.svg':'/icons/followHeart.svg'"/>
+                    <span class="appoint">喜欢{{item.appoint}}</span>
                 </p>
             </div>
             <div class="right">
@@ -62,12 +62,10 @@
     import { LazyImg } from 'vue-waterfall-plugin-next';
     import { ref, defineProps, onMounted, onUnmounted } from 'vue';
     
-    const props = defineProps({item:Object, url:String, index:Number});
+    const props = defineProps({item:Object, url:String, index:Number, likeStatusArr:Array});
     const global = useGlobal();
-    const tempStore = global.TempPinia;
     const store = global.Pinia;
-    const { userinfo } = storeToRefs(tempStore);
-    const { token } = storeToRefs(store);
+    const { userinfo } = storeToRefs(store);
 
     /**控制模态框显现与否**/
     const showModel = ref(false);
@@ -78,38 +76,25 @@
     /**控制懒加载**/
     const lazyLoad=ref(false);
 
-    /**点赞功能**/
-    const hadLike = ref(false);
-    const likeCount = ref(props.item.appoint);
-    async function getLikeStatus(){//获得点赞状态
-        if(token.value){//登录状态才能操作
-            let result = await axios.post(global.ServerPath+"/getLikeStatus", {user_id:userinfo.value.id, work_id:props.item.work_id});
-        
-            if(result.data.error){ElMessage.error("获取点赞状态失败")}
-            else{hadLike.value=result.data;}
-        }
-    }
-    async function changeLike(){//改变点赞状态
-        if(token.value){//登录状态才能操作
-            let result = await axios.post(global.ServerPath+"/changeLike", {user_id:userinfo.value.id, work_id:props.item.work_id});
-            if(result.data.error){
-                ElMessage.error("点赞发送错误")
+    /**点击改变点赞状态**/
+    const LikeStatus = ref(false);//点赞状态
+    const appointnum = ref(0);//点赞总数
+    async function changeLike(){
+        let result = await axios.post(global.ServerPath+"/changeLike", {work_id:props.item.work_id});
+        if(!result.data.error){
+            LikeStatus.value=result.data.LikeStatus;
+            if(props.item.appoint<result.data.appointnum){
+                props.likeStatusArr.push(props.item.work_id)
             }
             else{
-                hadLike.value=result.data.LikeStatus;
-                likeCount.value=result.data.appointnum;
+                props.likeStatusArr.splice(props.likeStatusArr.indexOf(props.item.work_id),1)
             }
+            props.item.appoint=result.data.appointnum;
+        }else{
+            ElMessage.error("改变点赞状态失败");
         }
-        else{
-            ElMessage.error("需要登录后才能点赞");
-        }
     }
-    function cancelLikeAfterLogout(){//下线后取消点赞状态
-        hadLike.value=false;
-    }
-    function resetLikeAfterLogout(){//上线后重新加载点赞状态
-        getLikeStatus();
-    }
+
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
@@ -118,15 +103,10 @@
 
     /**挂载触发**/
     onMounted(()=>{
-        getLikeStatus();
-        global.Bus.on("login", resetLikeAfterLogout);
-        global.Bus.on("logout", cancelLikeAfterLogout);
         lazyLoad.value=true;//启动懒加载
     })
     /**卸载触发**/
     onUnmounted(()=>{
-        global.Bus.off("login", resetLikeAfterLogout);
-        global.Bus.off("logout", cancelLikeAfterLogout);
     })
 </script>
 

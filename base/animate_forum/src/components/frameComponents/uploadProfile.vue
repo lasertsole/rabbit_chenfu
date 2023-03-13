@@ -13,7 +13,7 @@
   
   <script lang="ts" setup>
   import { ref } from 'vue'
-  import useGlobal from "../global/index.js"
+  import useGlobal from "/src/global/index.js"
   import { ElMessage } from 'element-plus'
   import { defineProps, defineEmits } from 'vue'
   import { Plus } from '@element-plus/icons-vue'
@@ -21,7 +21,8 @@
   import { storeToRefs } from 'pinia'
   
   const global = useGlobal();
-  const { userinfo } = storeToRefs(global.TempPinia);
+  const store=global.Pinia;//引入持久化存储
+  const { userinfo } = storeToRefs(store);
   
   const props = defineProps({profile:String, action:String});
   const emits = defineEmits(["changeProfile"]);

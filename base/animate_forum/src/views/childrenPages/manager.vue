@@ -42,9 +42,8 @@
     /****************************显示用户信息功能****************************/
     const global = useGlobal();//引入全局变量
     const store=global.Pinia;//引入持久化存储
-    const tempStore=global.TempPinia;//引入临时性存储
 
-    const { userinfo }=storeToRefs(tempStore);//用户登录后获得的用户信息
+    const { userinfo }=storeToRefs(store);//用户登录后获得的用户信息
     const { token }=storeToRefs(store);//用户登录后获得的令牌
     
     /****************************挂载触发****************************/

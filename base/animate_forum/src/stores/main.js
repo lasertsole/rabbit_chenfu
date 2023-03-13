@@ -4,6 +4,7 @@ export const useMainStore = defineStore({//持久化存储
     id: 'main', 
     state: () => ({
         token:undefined,
+        userinfo: undefined,
     }),
     //持久化选项
     persist:{ 
@@ -19,19 +20,13 @@ export const useMainStore = defineStore({//持久化存储
     getters: {
     },
     actions:{
+        removeAccount:function(){//移除账号信息
+            this.token=undefined;
+            this.userinfo=undefined;
+        },
+        setAccount:function(token,userinfo){//设置账号信息
+            this.token=token;
+            this.userinfo=userinfo;
+        },
     }
-
-})
-
-
-export const useTempStore = defineStore({//临时性存储
-    id: 'temp', 
-    state: () => ({
-        userinfo: undefined,
-    }),
-    getters: {
-    },
-    actions:{
-    }
-
 })

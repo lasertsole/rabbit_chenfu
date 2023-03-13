@@ -38,9 +38,8 @@
     
     const global = useGlobal();//引入全局变量
     const store = global.Pinia;//引入持久性存储
-    const tempStore = global.TempPinia;//引入临时性存储
     const { token }=storeToRefs(store);//token用于判断是否在线
-    const { userinfo }=storeToRefs(tempStore);//临时存储的用户信息
+    const { userinfo }=storeToRefs(store);//临时存储的用户信息
 
     const lazyLoad = ref(false);//设置懒加载
 

@@ -3,7 +3,8 @@ const { fileUpload } = require('./manner.js')
 
 /***********************主页-新作品***********************/
 async function getnewWorkBox(req, res) {//获取新作品盒子方法
-    let sql = 'select works,works_describe,profile as author_profile,username as author_name,appoint,author_id,work_id from newWork left join user_login on newWork.author_id=user_login.id order by newWork.created_time desc limit 50'
+    let sql = `select works,works_describe,profile as author_profile,username as author_name,appoint,author_id,work_id from
+     newWork left join user_login on newWork.author_id=user_login.id order by newWork.created_time desc limit 50`
     let result = await db.query(sql)
     if (result.error) {
         res.send({error: '获取推荐盒子失败'})
@@ -37,27 +38,35 @@ async function submitnewWorkBox(req, res){//用户上传新作品盒子
     }
 }
 
-async function getLikeStatus(req, res){//获取点赞状态
-    let data = req.body;
-    let user_id = data.user_id;
-    let work_id = data.work_id;
-
-    let sql = 'select * from newWork_like where user_id=? and work_id=?'
-    let result = await db.query(sql, [user_id, work_id]);
-
-    if(!result.error){
-        if(result.length!=0){res.send(true);}
-        else{res.send(false);}
+async function getLikeStatusArr(req, res){//获取点赞列表
+    let token = req.headers.token
+    console.log(token);
+    if(token){
+        let sql = 'select id from user_login where token = ?'
+        let result = await db.query(sql, [token])
+        let user_id = result[0].id;
+    
+        sql = 'select work_id from newwork_like where user_id=? order by created_time'
+        result = await db.query(sql, [user_id]);
+        result = result.map((item)=>{return item.work_id});
+    
+        if(!result.error){res.send(result);}
+        else{res.send({error:"获取点赞列表发生错误"});}
     }
-    else{res.send({error:"获取点赞状态发生错误"});}
+    else{
+        res.send([]);
+    }
 }
 async function changeLike(req, res){//改变点赞状态
+    let token = req.headers.token;
     let data = req.body;
-    let user_id = data.user_id;
+    let sql = 'select id from user_login where token = ?'
+    let result = await db.query(sql, [token])
+    let user_id = result[0].id;
     let work_id = data.work_id;
 
-    let sql = 'select * from newWork_like where user_id=? and work_id=?'
-    let result = await db.query(sql, [user_id, work_id]);
+    sql = 'select * from newWork_like where user_id=? and work_id=?'
+    result = await db.query(sql, [user_id, work_id]);
     if(result.error){res.send({error:"改变点赞状态发生错误"});}
 
     let LikeStatus = result.length!=0?true:false;
@@ -110,7 +119,7 @@ module.exports={
     getnewWorkBox,
     submitnewWorkBoxImage,
     submitnewWorkBox,
-    getLikeStatus,
+    getLikeStatusArr,
     changeLike,
     searchNewWorkBox,
 }
