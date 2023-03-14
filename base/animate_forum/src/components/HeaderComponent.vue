@@ -74,13 +74,13 @@
             h2{
                 color: white;
                 margin-left: 80px;
-                font-family: 楷体;
+                font-family: 仓耳舒圆体W03;
                 font-weight: bolder;
                 font-size: 30px;
             }
 
             div{
-                $logoEdge: 58px;
+                $logoEdge: 48px;
                 min-width: $logoEdge;
                 max-width: $logoEdge;
                 min-height: $logoEdge;
@@ -90,7 +90,7 @@
                 flex-direction: row;
                 align-items: center;
                 background-image: url("/icons/logo.png");
-                background-position: center 124px;
+                background-position: center 104px;
                 $backgroundEdge: $logoEdge*3.0;
                 background-size: $backgroundEdge $backgroundEdge;
                 overflow: hidden;

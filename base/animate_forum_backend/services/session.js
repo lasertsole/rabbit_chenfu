@@ -16,8 +16,13 @@ async function getSessionBox(req, res) {//获取消息盒子方法
             let id = result.id
             let username = result.username
             let profile = result.profile
-            let sql = 'select * from session where source_id = ? or target_id = ? order by created_time'//按创建时间排序
-            result = await db.query(sql,[id, id])
+            let sql = `
+                select leftTable.username as source_username, leftTable.profile as source_profile,midTable.source_id,midTable.target_id,midTable.content,rightTable.username as target_username,rightTable.profile as target_profile
+                from user_login as leftTable right join session as midTable on midTable.source_id=leftTable.id 
+                left join user_login as rightTable on midTable.target_id=rightTable.id 
+                where midTable.source_id = ? or midTable.target_id = ?
+                order by midTable.created_time`//按创建时间排序
+            result = await db.query(sql,[id, id]);
             if (result.error) {
                 res.send({error: '无消息盒子'})
             } else {

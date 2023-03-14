@@ -4,10 +4,10 @@
         <div class="communicate_information">
             <div ref="communicate_log" class="communicate_log">
                 <template v-for="item in AllChatLog">
-                    <sessionBox  v-if="item.id==uniqueContactsArr[indexContacts]" :isMe="item.isMe" :content="item.content" :profile="item.isMe?global.ServerPath+userinfo.profile:global.ServerPath+personList[indexContacts].profile"></sessionBox>
+                    <sessionBox  v-if="item.id==uniqueContactsArr[indexContacts].id" :isMe="item.isMe" :content="item.content" :profile="global.ServerPath+item.profile"></sessionBox>
                 </template>
             </div>
-            <textarea v-model="unSubmit_content" class="unSubmit_content" @keyup.enter="SubmitChat"></textarea>
+            <textarea maxlength="100" v-model="unSubmit_content" class="unSubmit_content" @keyup.enter="SubmitChat"></textarea>
             <el-button class="submitButton" type="primary" round @click="SubmitChat">发送</el-button>
         </div>
 
@@ -70,33 +70,24 @@
             let tempDetailArr=[];
             chatResult.value.forEach((item)=>{//联系人去重1 根据source_id和target_id选出联系人的id(不包括自己)
                 if(item.source_id!=userinfo.value.id){
-                    tempArr.push(item.source_id);
-
-                    tempDetailArr.push({id:item.source_id, created_time:item.created_time, content:item.content, isMe: false});
+                    tempArr.push({id:item.source_id, username:item.source_username, profile:item.source_profile});
+                    tempDetailArr.push({id:item.source_id, created_time:item.created_time, content:item.content, isMe: false, profile:item.source_profile});
                 }
                 if(item.target_id!=userinfo.value.id){
-                    tempArr.push(item.target_id);
-
-                    tempDetailArr.push({id:item.target_id, created_time:item.created_time, content:item.content, isMe: true});
+                    tempArr.push({id:item.target_id, username:item.target_username, profile:item.target_profile});
+                    tempDetailArr.push({id:item.target_id, created_time:item.created_time, content:item.content, isMe: true, profile:item.source_profile});
                 }
             })
-            tempArr = Array.from(new Set(tempArr))//联系人去重2 使用set函数去重
 
-            result = await axios.post(global.ServerPath+'/getPersonList',{personList:tempArr});//请求回每个联系人的头像、名字和id信息
+            let justify = {};//联系人去重2 使用set函数去重
+            tempArr = tempArr.reduce(function(item, next) {
+                justify[next.id] ? '' : justify[next.id] = true && item.push(next);
+                return item;
+                }, []);
 
-            result.data=result.data.map((item)=>{
-                let temp=0;
-                for(let i=0;i<tempDetailArr.length;i++){
-                    if(item.id==tempDetailArr[i].id){
-                        temp=i;
-                    }
-                }
-                return {content:tempDetailArr[temp].content, username:item.username, profile:item.profile}
-            })
-
-            personList.value=result.data;//得到右侧联系人列表的请求结果
-        /******左侧聊天具体内容******/
+            personList.value=tempArr;//得到右侧联系人列表的请求结果
             uniqueContactsArr.value=tempArr;//获取去重联系人列表
+        /******左侧聊天具体内容******/
             AllChatLog.value=tempDetailArr;//获取所有聊天记录(包含指向)
         
         /******判断聊天内容是否更新，更新时划到底部******/
@@ -111,7 +102,9 @@
     async function SubmitChat(){//提交聊天内容
         unSubmit_content.value=unSubmit_content.value.replace(/\n$/,"");//去掉回车发送时字符串后面的回车符
         if(unSubmit_content.value!=""){
-            let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value], content:unSubmit_content.value });
+            let obj = { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value].id, content:unSubmit_content.value }
+            console.log(obj)
+            let result = await axios.post(global.ServerPath+'/SubmitChat', obj);
             if(result.data.error){ElMessage.error("发送失败");}
             else{unSubmit_content.value="";sentRequire();}
         }
@@ -220,6 +213,7 @@
             }
 
             .unSubmit_content{
+                overflow-y: auto;
                 padding: 10px;
                 box-sizing: border-box;
                 border-radius: 8px;
@@ -243,15 +237,15 @@
         }
         .contacts{
             height: 100%;
-            width: 250px;
+            min-width: 250px;
             box-sizing: border-box;
             box-sizing: border-box;
             @media screen and (max-width: 945px) {
-                width: 200px;
+                min-width: 200px;
             }
 
             @media screen and (max-width: 610px) {
-                width: 150px;
+                min-width: 150px;
             }
             
             .scrollbar-demo-item {

@@ -1,6 +1,7 @@
 *{
   margin: 0;
   padding: 0;
+  font-family: 仓耳舒圆体W02;
 }
 ul{
   list-style: none;
@@ -110,4 +111,30 @@ button:focus-visible {
 .lazy__img[lazy=error] {
   padding: 5em 0;
   width: 48px;
+}
+
+/* 加载自定义字体 */
+@font-face{
+  font-family: '仓耳小丸子'; 
+  src:url('/src/assets/font/仓耳小丸子.ttf') format('truetype');
+}
+@font-face{
+  font-family: '仓耳舒圆体W01'; 
+  src:url('/src/assets/font/仓耳舒圆体W01.ttf') format('truetype');
+}
+@font-face{
+  font-family: '仓耳舒圆体W02'; 
+  src:url('/src/assets/font/仓耳舒圆体W02.ttf') format('truetype');
+}
+@font-face{
+  font-family: '仓耳舒圆体W03'; 
+  src:url('/src/assets/font/仓耳舒圆体W03.ttf') format('truetype');
+}
+@font-face{
+  font-family: '仓耳舒圆体W04'; 
+  src:url('/src/assets/font/仓耳舒圆体W04.ttf') format('truetype');
+}
+@font-face{
+  font-family: '仓耳舒圆体W05'; 
+  src:url('/src/assets/font/仓耳舒圆体W05.ttf') format('truetype');
 }

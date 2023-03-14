@@ -88,17 +88,6 @@ async function getAccountInfoByID(id) {//根据id获得账户基本信息(userna
         return {username:result[0].username, profile:result[0].profile, id}
     }
 };
-async function getInfoByID(req, res){//根据id获得账户基本信息的暴露给前端的函数(username,profile)
-    let data = req.body;
-    let id = data.id;
-    let result = await getAccountInfoByID(id);
-    if(result.error){
-        res.send({error: '找不到匹配id的信息'});
-    }
-    else{
-        res.send({result});
-    }
-}
 
 /***********************用户头像上传***********************/
 async function submitUserProfile(req, res) {//用户上传头像
@@ -150,7 +139,4 @@ module.exports={
     /*工具函数*/
     getAccountInfoByToken,
     getAccountInfoByID,
-
-    /*工具请求函数*/
-    getInfoByID,
 }

@@ -23,9 +23,7 @@ async function submitnewWorkBoxImage(req, res) {//用户上传新作品盒子的
 };
 async function submitnewWorkBox(req, res){//用户上传新作品盒子
     let data = req.body;
-    console.log(data);
     let works = "/files/"+data.works;
-    console.log(works);
     let works_describe = data.works_describe;
     let author_id = data.author_id;
 
@@ -40,7 +38,6 @@ async function submitnewWorkBox(req, res){//用户上传新作品盒子
 
 async function getLikeStatusArr(req, res){//获取点赞列表
     let token = req.headers.token
-    console.log(token);
     if(token){
         let sql = 'select id from user_login where token = ?'
         let result = await db.query(sql, [token])

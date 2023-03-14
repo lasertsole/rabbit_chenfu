@@ -1,6 +1,6 @@
 const express = require("express")
 const cors = require('cors')
-const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName, getInfoByID} = require("./services/account.js")
+const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName} = require("./services/account.js")
 
 const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr, changeLike, searchNewWorkBox} = require("./services/newWork.js")
 const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
@@ -44,9 +44,6 @@ app.get('/fasterLogin', fasterLogin)//token登录
 app.post('/submitUserProfile', submitUserProfile);//上传头像
 app.post('/changeUserProfile', changeUserProfile);//更改头像
 app.post('/submitNewName', submitNewName);//更改用户名字
-
-/*获取用户信息*/
-app.post('/getInfoByID', getInfoByID);//根据ID获取个人信息
 
 /*主页-新作品*/
 app.get("/getnewWorkBox", getnewWorkBox)//获取新作品盒子方法
