@@ -8,7 +8,7 @@
                 scroll-container=".page-content"
             />
         </div>
-        <div class="content">{{content}}</div>
+        <div class="content" v-html="content"></div>
     </div>
 
 </template>
@@ -99,6 +99,26 @@
             direction:ltr;
             @media screen and (max-width: 610px) {
                 max-width: 100%;
+            }
+        }
+    }
+</style>
+<style lang="scss">
+    .sessionBox{
+        .content{
+            .showCase{
+                color: black;
+                max-width: 300px;
+                display: block;
+                .works{
+                    margin-top: 10px;
+                    width: 100%;
+                }
+
+                .price{
+                    margin-top: 5px;
+                    color: #ff5000;
+                }
             }
         }
     }

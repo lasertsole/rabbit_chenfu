@@ -75,7 +75,7 @@
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
-        router.replace({ name: "session", query: {target_id:props.id, search_id:props.search_id, type:"showCaseBox"}});
+        router.replace({ name: "session", query: {target_id:props.id, search_id:props.search_id, works:props.works, sold_num:props.sold_num, type:"showCaseBox"}});
     }
 
     /**模态框打开关闭时改变url**/
@@ -91,6 +91,8 @@
     onMounted(()=>{
        lazyLoad.value=true;//启动懒加载
     })
+
+    
 </script>
 
 <style lang="scss" scoped>

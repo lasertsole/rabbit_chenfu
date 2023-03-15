@@ -1,5 +1,5 @@
 <template>
-    <div class="announcement">
+    <div class="announcement" v-if="announcemnentArr.length>0">
         <announcementBox
             v-for="(item, index) in announcemnentArr"
             :title="item.title"
@@ -7,16 +7,19 @@
             :content="item.content"
         ></announcementBox>
     </div>
+    <div class="mock" v-else v-if="showHadNotResult">
+        <p>无公告信息</p>
+    </div>
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted, ref } from "vue";
     import axios from "axios";
-    import { ElMessage } from "element-plus"
-    import announcementBox from "/src/components/message/announcement/announcementBox.vue"
     import useGlobal from "/src/global";
+    import { storeToRefs } from "pinia";
+    import { ElMessage } from "element-plus"
     import { useRoute, useRouter } from "vue-router";
-    import { storeToRefs } from "pinia"
+    import { onMounted, onUnmounted, ref, watch } from "vue";
+    import announcementBox from "/src/components/message/announcement/announcementBox.vue"
 
     const global = useGlobal();//引入全局变量
     const store = global.Pinia;//引入持久性存储
@@ -35,6 +38,9 @@
             announcemnentArr.value = result.data;
         }
     }
+    /****************************watch监听控制显示无结果提示****************************/
+    const showHadNotResult = ref(false);//显示无结果提示
+    watch(announcemnentArr,()=>{showHadNotResult.value=!(announcemnentArr.value.length>0)})
     
     /****************************Bus监听函数****************************/
     //用户下线
@@ -66,6 +72,14 @@
         box-sizing: border-box;
         max-width: 1280px;
         flex-basis: 1280px;
+    }
+    .mock{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 30px;
     }
 
     ::-webkit-scrollbar {

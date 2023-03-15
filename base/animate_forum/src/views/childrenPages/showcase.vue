@@ -1,6 +1,6 @@
 <template>
-    <div class="showcase" v-if="showCaseBoxes.length>0">
-        <showCaseBox v-for="(item,index) in showCaseBoxes"
+    <div class="showcase" ref="showcase" v-if="showCaseBoxes.length>0">
+        <showCaseBox ref="showcaseBox" v-for="(item,index) in showCaseBoxes"
             :works="global.ServerPath+item.works"
             :author_profile="global.ServerPath+item.author_profile"
             :author_name="item.author_name"
@@ -10,6 +10,7 @@
             :search_id="item.search_id"
             :id="item.id">
         </showCaseBox>
+        <div class="fixBox" v-for="(item, index) in needFixBox"></div>
     </div>
     <div class="mock" v-else v-if="showHadNotResult">
         <p><img src="/icons/hadNotResult.svg"></p>
@@ -44,6 +45,7 @@
     import { onMounted, onUnmounted, ref, watch } from "vue";
     import showCaseBox from "/src/components/reservation/showcase/showCaseBox.vue"
     import showcaseUploadBox from "/src/components/reservation/showcase/showcaseUploadBox.vue"
+import { computeStyles, left } from "@popperjs/core";
 
     const global = useGlobal();
     const tempStore = global.TempPinia;
@@ -112,19 +114,37 @@
             showUploadModel.value=!showUploadModel.value;
         }
     }
+    
+    /*************当屏幕大小变化时填充空盒子实现布局自适应*************/
+    const showcase = ref();
+    let showCaseInnerWidth = 0;
+    let showcaseBoxesNum = 0;// 橱窗盒子总数
+    let showcaseBoxOuterWidth = 230;//单个橱窗盒子的外部宽度
+    let boxesEachRow = 0;//每行能容纳橱窗盒子个数
+    let rowsholder = 0;//所有橱窗盒子所占用的行数
+    let needFixBox = ref(0);//需要填补的盒子个数
+
+    function fixBoxes(){//用于计算需要填充的盒子个数
+        showCaseInnerWidth = parseInt(getComputedStyle(showcase.value).width)-parseInt(getComputedStyle(showcase.value).paddingLeft)-parseInt(getComputedStyle(showcase.value).paddingRight);
+        showcaseBoxesNum = showCaseBoxes.value.length;
+        boxesEachRow = Math.floor(showCaseInnerWidth/showcaseBoxOuterWidth);
+        rowsholder=Math.ceil(showcaseBoxesNum/boxesEachRow);
+        needFixBox.value=rowsholder*boxesEachRow-showcaseBoxesNum;
+    }
 
     /****************************挂载触发****************************/
     onMounted(()=>{
-        sentRequire();
+        sentRequire().then(()=>{fixBoxes()});
         uploadInformation();
         Bus.on("searchEvent", searchEvent);
+        window.addEventListener("resize",fixBoxes,false);//绑定监听屏幕大小变化事件
     });
 
     /****************************卸载解绑****************************/
     onUnmounted(()=>{
         Bus.off("searchEvent", searchEvent);
+        window.removeEventListener("resize",fixBoxes);//解绑监听屏幕大小变化事件
     })
-    
 </script>
 
 <style lang="scss" scoped>
@@ -134,10 +154,15 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: center;
         box-sizing: border-box;
         max-width: 1280px;
         flex-basis: 1280px;
+        .fixBox{
+            box-sizing: border-box;
+            width: 230px;
+            height: 280px;
+        }
     }
     .mock{
         display: flex;

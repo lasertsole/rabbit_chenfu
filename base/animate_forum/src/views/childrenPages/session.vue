@@ -1,6 +1,5 @@
 <template>
-    <div class="session">
-
+    <div class="session" v-if="AllChatLog.length>0">
         <div class="communicate_information">
             <div ref="communicate_log" class="communicate_log">
                 <template v-for="item in AllChatLog">
@@ -25,15 +24,18 @@
             </el-scrollbar>
         </div>
     </div>
+    <div class="mock" v-else v-if="showHadNotResult">
+        <p>无聊天记录</p>
+    </div>
 </template>
 
 <script setup>
     import axios from "axios";
     import { storeToRefs } from 'pinia';
     import useGlobal from "/src/global";
-    import { useRoute, useRouter } from "vue-router";
     import { ElMessage } from 'element-plus';
-    import { onMounted, onUnmounted, ref, nextTick  } from "vue";
+    import { useRoute, useRouter } from "vue-router";
+    import { onMounted, onUnmounted, ref, nextTick, watch  } from "vue";
     import sessionBox from "/src/components/message/session/sessionBox.vue";
     
     const global = useGlobal();//引入全局变量
@@ -134,7 +136,9 @@
 
                 if(route.query.search_id&&route.query.type){//传交易信息到session
                     if(route.query.type=="showCaseBox"){//从showCase页面传来的约稿信息
-                        console.log(route.query.search_id);
+                        let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:userinfo.value.id, target_id:route.query.target_id, content:`<a class="showCase"><p>大佬最近有档期吗？我想约这个</p><img class="works" src="${route.query.works}"/><p class="price">￥${route.query.sold_num}</p></a>`});
+                        if(result.data.error){ElMessage.error("发送失败");}
+                        else{sentRequire()}
                     }
                     else{//从require页面传来的约稿信息
                         console.log(route.query.search_id);
@@ -143,7 +147,10 @@
             }
         }
     }
-
+    /****************************watch监听控制显示无结果提示****************************/
+    const showHadNotResult = ref(false);//显示无结果提示
+    watch(AllChatLog,()=>{showHadNotResult.value=!(AllChatLog.value.length>0)})
+    
     /****************************Bus监听函数****************************/
     //用户上线
     function sessionLogin(data){
@@ -326,6 +333,14 @@
                 }
             }
         }
+    }
+    .mock{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 30px;
     }
     ::-webkit-scrollbar {
         width: 4px;
