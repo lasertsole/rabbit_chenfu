@@ -1,6 +1,5 @@
 <template>
-    
-    <div class="showcase">
+    <div class="showcase" v-if="showCaseBoxes.length>0">
         <showCaseBox v-for="(item,index) in showCaseBoxes"
             :works="global.ServerPath+item.works"
             :author_profile="global.ServerPath+item.author_profile"
@@ -8,8 +7,13 @@
             :author_comment="item.author_comment"
             :price="item.price"
             :sold_num="item.sold_num"
+            :search_id="item.search_id"
             :id="item.id">
         </showCaseBox>
+    </div>
+    <div class="mock" v-else v-if="showHadNotResult">
+        <p><img src="/icons/hadNotResult.svg"></p>
+        <p>未能找到结果</p>
     </div>
 
     <el-dialog class="uploadBox" style="width: 800px; padding: 30px 56px; border-radius: 10px; box-shadow: 5px 5px 30px 1px #00AEEC;" v-model="showUploadModel" :show-close="true">
@@ -37,7 +41,7 @@
     import useGlobal from "/src/global"
     import { useRoute } from 'vue-router'
     import { ElMessage } from "element-plus";
-    import { onMounted, onUnmounted, ref } from "vue";
+    import { onMounted, onUnmounted, ref, watch } from "vue";
     import showCaseBox from "/src/components/reservation/showcase/showCaseBox.vue"
     import showcaseUploadBox from "/src/components/reservation/showcase/showcaseUploadBox.vue"
 
@@ -45,7 +49,7 @@
     const tempStore = global.TempPinia;
     const { userinfo } = storeToRefs(tempStore);
 
-    const showCaseBoxes = ref();
+    const showCaseBoxes = ref([]);
     async function sentRequire(){//请求橱窗盒子
         let resuit = await axios.get(global.ServerPath+'/getShowCaseBox');
         showCaseBoxes.value = resuit.data;
@@ -83,6 +87,9 @@
             sentRequire();
         }
     }
+    /****************************watch监听控制显示无结果提示****************************/
+    const showHadNotResult = ref(false);//显示无结果提示
+    watch(showCaseBoxes,()=>{showHadNotResult.value=!(showCaseBoxes.value.length>0)})
 
     /****************************Bus监听函数****************************/
     const Bus = global.Bus;//从全局属性里获取事件总线
@@ -131,6 +138,19 @@
         box-sizing: border-box;
         max-width: 1280px;
         flex-basis: 1280px;
+    }
+    .mock{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+        img{
+            $imgEdge:150px;
+            width: $imgEdge;
+            height: $imgEdge;
+        }
     }
 
     .uploadBox{

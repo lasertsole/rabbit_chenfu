@@ -1,5 +1,5 @@
 <template>
-    <div class="following">
+    <div class="following" v-if="showFollowingBoxes.length>0">
         <trendsBox
             v-for="(item, index) in showFollowingBoxes"
             :user_profile="global.ServerPath+item.user_profile"
@@ -9,6 +9,10 @@
             :author_id="item.id"
             :imageArr="item.user_photos">
         </trendsBox>
+    </div>
+    <div class="mock" v-else v-if="showHadNotResult">
+        <p><img src="/icons/hadNotResult.svg"></p>
+        <p>未能找到结果</p>
     </div>
 
     <el-dialog class="uploadBox" style="width: 800px; padding: 30px 56px; border-radius: 10px; box-shadow: 5px 5px 30px 1px #00AEEC;" v-model="showUploadModel" :show-close="true">
@@ -31,11 +35,11 @@
 
 <script setup>
     import axios from 'axios'
-    import {ref, onMounted, onUnmounted} from 'vue'
     import { storeToRefs } from "pinia"
     import useGlobal from "/src/global"
     import { useRoute } from 'vue-router'
     import { ElMessage } from "element-plus";
+    import {ref, onMounted, onUnmounted, watch} from 'vue'
     import trendsBox from "/src/components/index/trends/trendsBox.vue"
     import trendsUploadBox from "/src/components/index/trends/trendsUploadBox.vue"
 
@@ -43,10 +47,11 @@
     const tempStore = global.TempPinia;
     const { userinfo } = storeToRefs(tempStore);
 
-    const showFollowingBoxes = ref();
+    /****************************更改关注盒子状态****************************/
+    const showFollowingBoxes = ref([]);
     async function sentRequire(){//请求关注盒子
-        let resuit = await axios.get(global.ServerPath+'/getTrendsBox');
-        showFollowingBoxes.value=resuit.data;
+        let result = await axios.get(global.ServerPath+'/getTrendsBox');
+        showFollowingBoxes.value=result.data;
     }
 
     async function clickUpload(){//提交推荐盒子
@@ -77,17 +82,17 @@
             }
         }
     }
+
+    /****************************watch监听控制显示无结果提示****************************/
+    const showHadNotResult = ref(false);//显示无结果提示
+    watch(showFollowingBoxes,()=>{showHadNotResult.value=!(showFollowingBoxes.value.length>0)})
     
     /****************************Bus监听函数****************************/
     const Bus = global.Bus;//从全局属性里获取事件总线
     async function searchEvent(searchContent){
         let result = await axios.get(global.ServerPath+"/searchTrendsBox",{params:{searchContent}});
-        if(!result.data.error){
-            showFollowingBoxes.value=result.data;
-        }
-        else{
-            ElMessage.error(result.data.error);
-        }
+        if(!result.data.error){showFollowingBoxes.value=result.data;}
+        else{ElMessage.error(result.data.error);}
     }
 
     /****************************路由传参****************************/
@@ -126,6 +131,19 @@
             width: 100%;
             margin-bottom: 10px;
             object-fit: cover;
+        }
+    }
+    .mock{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+        img{
+            $imgEdge:150px;
+            width: $imgEdge;
+            height: $imgEdge;
         }
     }
 

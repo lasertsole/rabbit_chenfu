@@ -1,4 +1,4 @@
-<template>userinfo?.id
+<template>
     <div class="newWorkBox"
         @click="clickShowModel">
         <LazyImg :url="url"/>

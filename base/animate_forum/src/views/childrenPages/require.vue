@@ -1,5 +1,5 @@
 <template>
-    <div class="require">
+    <div class="require" v-if="showRequireBoxes.length>0">
         <requireBox
             v-for="(item, index) in showRequireBoxes"
             :title="item.title"
@@ -10,8 +10,13 @@
             :calendar="item.calendar.substring(0, 10)"
             :profile="global.ServerPath+item.profile"
             :username="item.username"
+            :search_id="item.search_id"
             :id="item.id">
         </requireBox>
+    </div>
+    <div class="mock" v-else v-if="showHadNotResult">
+        <p><img src="/icons/hadNotResult.svg"></p>
+        <p>未能找到结果</p>
     </div>
 
     <el-dialog class="uploadBox"
@@ -67,16 +72,16 @@
 
 <script setup>
     import axios from "axios";
-    import { onMounted, onUnmounted, ref } from "vue";
-    import { useRoute } from 'vue-router'
     import useGlobal from "/src/global";
+    import { useRoute } from 'vue-router';
     import { ElMessage } from "element-plus";
+    import { onMounted, onUnmounted, ref, watch } from "vue";
     import requireBox from "/src/components/reservation/require/requireBox.vue"
     import uploadRequireBox from "/src/components/reservation/require/uploadRequireBox.vue"
 
     const global = useGlobal();//获取全局变量
 
-    const showRequireBoxes = ref();//用于改变UI的变量
+    const showRequireBoxes = ref([]);//用于改变UI的变量
     async function sentRequire(){//请求橱窗盒子
         let resuit = await axios.get(global.ServerPath+'/getRequireBox');
         showRequireBoxes.value = resuit.data;
@@ -141,17 +146,17 @@
         uploadDeadline.value=undefined;
         sentRequire();
     }
+    
+    /****************************watch监听控制显示无结果提示****************************/
+    const showHadNotResult = ref(false);//显示无结果提示
+    watch(showRequireBoxes,()=>{showHadNotResult.value=!(showRequireBoxes.value.length>0)})
 
     /****************************Bus监听函数****************************/
     const Bus = global.Bus;//从全局属性里获取事件总线
     async function searchEvent(searchContent){
         let result = await axios.get(global.ServerPath+"/searchRequireBox",{params:{searchContent}});
-        if(!result.data.error){
-            showRequireBoxes.value=result.data;
-        }
-        else{
-            ElMessage.error(result.data.error);
-        }
+        if(!result.data.error){showRequireBoxes.value=result.data;}
+        else{ElMessage.error(result.data.error);}
     }
     
     /****************************路由传参****************************/
@@ -183,6 +188,19 @@
         box-sizing: border-box;
         max-width: 1280px;
         flex-basis: 1280px;
+    }
+    .mock{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+        img{
+            $imgEdge:150px;
+            width: $imgEdge;
+            height: $imgEdge;
+        }
     }
 
     .uploadBox{

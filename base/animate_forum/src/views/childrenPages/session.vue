@@ -4,7 +4,7 @@
         <div class="communicate_information">
             <div ref="communicate_log" class="communicate_log">
                 <template v-for="item in AllChatLog">
-                    <sessionBox  v-if="item.id==uniqueContactsArr[indexContacts].id" :isMe="item.isMe" :content="item.content" :profile="global.ServerPath+item.profile"></sessionBox>
+                    <sessionBox  v-if="item.id==uniqueContactsIdArr[indexContacts]" :isMe="item.isMe" :content="item.content" :profile="global.ServerPath+item.profile"></sessionBox>
                 </template>
             </div>
             <textarea maxlength="100" v-model="unSubmit_content" class="unSubmit_content" @keyup.enter="SubmitChat"></textarea>
@@ -47,7 +47,7 @@
     const personList = ref([]);//右侧联系人列表
 
     const indexContacts=ref(0)//聊天记录对于右侧列表的联系人（默认打开第一个）
-    const uniqueContactsArr = ref([]);//去重联系人列表(只包含id)
+    const uniqueContactsIdArr = ref([]);//去重联系人列表(只包含id)
     const AllChatLog=ref([]);//所有聊天记录(包含指向)
 
     let setIntervalContain;//轮询函数容器
@@ -69,27 +69,25 @@
             let tempArr=[];
             let tempDetailArr=[];
             chatResult.value.forEach((item)=>{//联系人去重1 根据source_id和target_id选出联系人的id(不包括自己)
-                if(item.source_id!=userinfo.value.id){
-                    tempArr.push({id:item.source_id, username:item.source_username, profile:item.source_profile});
+                if(item.target_id==userinfo.value.id){
+                    tempArr.push({id:item.source_id, username:item.source_username, profile:item.source_profile, content:item.content});
                     tempDetailArr.push({id:item.source_id, created_time:item.created_time, content:item.content, isMe: false, profile:item.source_profile});
                 }
-                if(item.target_id!=userinfo.value.id){
-                    tempArr.push({id:item.target_id, username:item.target_username, profile:item.target_profile});
+                if(item.source_id==userinfo.value.id){
+                    tempArr.push({id:item.target_id, username:item.target_username, profile:item.target_profile, content:item.content});
                     tempDetailArr.push({id:item.target_id, created_time:item.created_time, content:item.content, isMe: true, profile:item.source_profile});
                 }
             })
 
-            let justify = {};//联系人去重2 使用set函数去重
-            tempArr = tempArr.reduce(function(item, next) {
-                justify[next.id] ? '' : justify[next.id] = true && item.push(next);
+            let justify = {};//联系人去重2
+            uniqueContactsIdArr.value=[];//联系人唯一id列表重置
+            tempArr = tempArr.reverse().reduce(function(item, next) {//去重先翻转数组，保证最近聊天的在最顶部，并且指向最后的聊天记录
+                justify[next.id] ? '' : justify[next.id] = true && item.push(next) && uniqueContactsIdArr.value.push(next.id);
                 return item;
                 }, []);
-
+        /******左右侧聊天具体内容******/
+            AllChatLog.value=tempDetailArr;//获取左侧所有聊天记录(包含指向)
             personList.value=tempArr;//得到右侧联系人列表的请求结果
-            uniqueContactsArr.value=tempArr;//获取去重联系人列表
-        /******左侧聊天具体内容******/
-            AllChatLog.value=tempDetailArr;//获取所有聊天记录(包含指向)
-        
         /******判断聊天内容是否更新，更新时划到底部******/
             if(AllChatLogLength.value!=AllChatLog.value.length){
                 AllChatLogLength.value=AllChatLog.value.length;
@@ -102,7 +100,7 @@
     async function SubmitChat(){//提交聊天内容
         unSubmit_content.value=unSubmit_content.value.replace(/\n$/,"");//去掉回车发送时字符串后面的回车符
         if(unSubmit_content.value!=""){
-            let obj = { source_id:userinfo.value.id, target_id:uniqueContactsArr.value[indexContacts.value].id, content:unSubmit_content.value }
+            let obj = { source_id:userinfo.value.id, target_id:uniqueContactsIdArr.value[indexContacts.value].id, content:unSubmit_content.value }
             console.log(obj)
             let result = await axios.post(global.ServerPath+'/SubmitChat', obj);
             if(result.data.error){ElMessage.error("发送失败");}
@@ -124,13 +122,24 @@
             if(route.query.target_id==userinfo.value.id){
                 ElMessage.error("你不能给自己私信");
             }
-            else if(uniqueContactsArr.value.indexOf(route.query.target_id)<0){//私信的人不在列表中
-                let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:route.query.target_id, target_id:userinfo.value.id, content:"现在开始私聊吧~" });
-                if(result.data.error){ElMessage.error("发送失败");}
-                else{sentRequire();}
-            }
             else{
-                indexContacts.value=uniqueContactsArr.value.indexOf(route.query.target_id);
+                if(uniqueContactsIdArr.value.indexOf(route.query.target_id)<0){//私信的人不在列表中
+                    let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:route.query.target_id, target_id:userinfo.value.id, content:"现在开始私聊吧~" });
+                    if(result.data.error){ElMessage.error("发送失败");}
+                    else{sentRequire().then(()=>{indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id)})}
+                }
+                else{
+                    indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id);
+                }
+
+                if(route.query.search_id&&route.query.type){//传交易信息到session
+                    if(route.query.type=="showCaseBox"){//从showCase页面传来的约稿信息
+                        console.log(route.query.search_id);
+                    }
+                    else{//从require页面传来的约稿信息
+                        console.log(route.query.search_id);
+                    }
+                }
             }
         }
     }
@@ -151,7 +160,7 @@
         chatResult.value=[];
         personList.value=[];
         indexContacts.value=0;
-        uniqueContactsArr.value=[];
+        uniqueContactsIdArr.value=[];
         AllChatLog.value=[];
         //强制跳转到其他页面
         router.replace({ name: 'index'});
