@@ -2,8 +2,8 @@ const db = require('../db.js')
 const { fileUpload } = require('./manner.js')
 
 async function getShowCaseBox(req, res) {//获取橱窗盒子方法
-    let sql = `select works,profile as author_profile,author_comment,price,sold_num,username 
-    as author_name,showcase.id from showcase left join user_login on showcase.id=user_login.id 
+    let sql = `select works,profile as author_profile,author_comment,price,sold_num,username as 
+    author_name,showcase.id, search_id from showcase left join user_login on showcase.id=user_login.id 
     order by showcase.created_time desc limit 50`
     let result = await db.query(sql)
     if (result.error) {
@@ -53,10 +53,23 @@ async function searchShowCaseBox(req, res){//搜索橱窗盒子
     if(!result.error){res.send(result);}else{res.send({error:"查找发送错误"});};
 }
 
+async function searchShowCaseBoxBySearchID(req, res){//根据searchID查找橱窗盒子信息
+    let data=req.query;
+    let search_id=data.search_id;
+
+    let sql = `select works,profile as author_profile,author_comment,price,sold_num,username as author_name,
+    showcase.id from showcase left join user_login on showcase.id=user_login.id where search_id=?`
+
+    let result = await db.query(sql, [search_id]);
+    
+    if(!result.error){res.send(result[0]);}else{res.send({error:"查找发送错误"});};
+}
+
 module.exports={
     //约稿-橱窗
     getShowCaseBox,
     submitShowCaseBoxImage,
     submitShowCaseBox,
     searchShowCaseBox,
+    searchShowCaseBoxBySearchID,
 }

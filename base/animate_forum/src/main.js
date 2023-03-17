@@ -1,13 +1,13 @@
 import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
+import '/src/style.css'
+import App from '/src/App.vue'
 
 //引入router
-import router from './router'
+import router from '/src/router'
 
 //引入pinia持久化存储和临时性存储
-import store from './stores'
-import { useMainStore }  from "./stores/main.js"
+import store from '/src/stores'
+import { useMainStore, useDetailPageStore }  from "/src/stores/main.js"
 
 //引入Element-Plus
 import ElementPlus from 'element-plus'
@@ -28,7 +28,9 @@ app.use(ElementPlus);
 
 //将pinia存储的数据全局化
 let mainStore = useMainStore();
+let detailPageStore = useDetailPageStore();
 app.config.globalProperties.Pinia = mainStore;
+app.config.globalProperties.detailPage = detailPageStore;
 //事件总线全局化
 app.config.globalProperties.Bus = new mitt();
 //服务器地址与端口全局化
@@ -58,5 +60,6 @@ axios.interceptors.response.use((res)=>{
 });
 
 router.initRouterGuard(mainStore)//初始化路由守卫
+detailPageStore.initServerPath(ServerPath)//初始化detailPageStore的服务器地址
 
 app.mount('#app')

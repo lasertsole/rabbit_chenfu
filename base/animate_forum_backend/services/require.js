@@ -4,8 +4,8 @@ const { fileUpload } = require('./manner.js')
 /***********************约稿-需求帖***********************/
 async function getRequireBox(req, res) {//获取需求盒子方法
     let sql = `select title,describe_require,describe_image,money,tag,calendar,requireBox.id,
-    profile,username from requireBox left join user_login on requireBox.id=user_login.id order 
-    by requireBox.created_time desc limit 50`
+    profile,username,search_id from requireBox left join user_login on requireBox.id=user_login.id
+     order by requireBox.created_time desc limit 50`
     let result = await db.query(sql)
     if (result.error) {
         res.send({error: '获取需求盒子失败'})
@@ -64,10 +64,23 @@ async function searchRequireBox(req, res){//搜索需求盒子
     if(!result.error){res.send(result);}else{res.send({error:"查找发送错误"});};
 }
 
+async function searchRequireBoxBySearchID(req, res){//根据searchID查找需求盒子信息
+    let data=req.query;
+    let search_id=data.search_id;
+
+    let sql = `select title,describe_require,describe_image,money,tag,calendar,requireBox.id,profile,
+    username from requireBox left join user_login on requireBox.id=user_login.id where search_id=?`;
+
+    let result = await db.query(sql, [search_id]);
+    
+    if(!result.error){res.send(result[0]);}else{res.send({error:"查找发送错误"});};
+}
+
 module.exports={
     //约稿-需求帖
     getRequireBox,
     submitRequireBoxImage,
     submitRequireBox,
     searchRequireBox,
+    searchRequireBoxBySearchID,
 }

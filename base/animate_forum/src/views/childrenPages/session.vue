@@ -3,26 +3,13 @@
         <div class="communicate_information">
             <div ref="communicate_log" class="communicate_log">
                 <template v-for="item in AllChatLog">
-                    <sessionBox  v-if="item.id==uniqueContactsIdArr[indexContacts]" :isMe="item.isMe" :content="item.content" :profile="global.ServerPath+item.profile"></sessionBox>
+                    <sessionBox  v-show="item.id==uniqueContactsIdArr[indexContacts]" :isMe="item.isMe" :content="item.content" :profile="global.ServerPath+item.profile"></sessionBox>
                 </template>
             </div>
             <textarea maxlength="100" v-model="unSubmit_content" class="unSubmit_content" @keyup.enter="SubmitChat"></textarea>
             <el-button class="submitButton" type="primary" round @click="SubmitChat">发送</el-button>
         </div>
-
-        <div class="contacts">
-            <el-scrollbar>
-                <p v-for="(item, index) in personList" :key="item" class="scrollbar-demo-item" @click="indexContacts=index">
-                    <div class="profile_box">
-                        <img class="profile" :src="global.ServerPath+item.profile"/>
-                    </div>
-                    <div class="info">
-                        <div class="user_name">{{item.username}}</div>
-                        <div class="last_community_content">{{item.content}}</div>
-                    </div>
-                </p>
-            </el-scrollbar>
-        </div>
+        <contacts :personList="personList" @changeIndexContacts="changeIndexContacts"></contacts>
     </div>
     <div class="mock" v-else v-if="showHadNotResult">
         <p>无聊天记录</p>
@@ -36,6 +23,7 @@
     import { ElMessage } from 'element-plus';
     import { useRoute, useRouter } from "vue-router";
     import { onMounted, onUnmounted, ref, nextTick, watch  } from "vue";
+    import contacts from "/src/components/message/session/contacts.vue";
     import sessionBox from "/src/components/message/session/sessionBox.vue";
     
     const global = useGlobal();//引入全局变量
@@ -93,6 +81,7 @@
         /******判断聊天内容是否更新，更新时划到底部******/
             if(AllChatLogLength.value!=AllChatLog.value.length){
                 AllChatLogLength.value=AllChatLog.value.length;
+                changeIndexContacts(0)//左边跳转到第一页
                 nextTick(()=>{scrollToBottom()});//nextTick确保scrollToBottom()在聊天框总长度更新完之后才执行
             }
         }
@@ -102,13 +91,17 @@
     async function SubmitChat(){//提交聊天内容
         unSubmit_content.value=unSubmit_content.value.replace(/\n$/,"");//去掉回车发送时字符串后面的回车符
         if(unSubmit_content.value!=""){
-            let obj = { source_id:userinfo.value.id, target_id:uniqueContactsIdArr.value[indexContacts.value].id, content:unSubmit_content.value }
-            console.log(obj)
+            let contentObj={classify:"chat", data:[{type:"text",content:unSubmit_content.value}]};
+            let obj = { source_id:userinfo.value.id, target_id:uniqueContactsIdArr.value[indexContacts.value], content:JSON.stringify(contentObj)}
             let result = await axios.post(global.ServerPath+'/SubmitChat', obj);
             if(result.data.error){ElMessage.error("发送失败");}
-            else{unSubmit_content.value="";sentRequire();}
+            else{unSubmit_content.value="";sentRequire()}
         }
         else{ElMessage('请先输入内容');}
+    }
+
+    function changeIndexContacts(index){//由右边联系人列表改变左边的聊天内容
+        indexContacts.value=index;
     }
 
     const communicate_log = ref();//获取聊天框原生元素
@@ -126,7 +119,10 @@
             }
             else{
                 if(uniqueContactsIdArr.value.indexOf(route.query.target_id)<0){//私信的人不在列表中
-                    let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:route.query.target_id, target_id:userinfo.value.id, content:"现在开始私聊吧~" });
+                    let contentObj={classify:"chat", data:[{type:"text",content:"现在开始私聊吧~"}]};
+                    let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:route.query.target_id,
+                         target_id:userinfo.value.id, content:JSON.stringify(contentObj)});
+                         
                     if(result.data.error){ElMessage.error("发送失败");}
                     else{sentRequire().then(()=>{indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id)})}
                 }
@@ -136,17 +132,30 @@
 
                 if(route.query.search_id&&route.query.type){//传交易信息到session
                     if(route.query.type=="showCaseBox"){//从showCase页面传来的约稿信息
-                        let result = await axios.post(global.ServerPath+'/SubmitChat', { source_id:userinfo.value.id, target_id:route.query.target_id, content:`<a class="showCase"><p>大佬最近有档期吗？我想约这个</p><img class="works" src="${route.query.works}"/><p class="price">￥${route.query.sold_num}</p></a>`});
+                        let contentObj={classify:"reservation", kind:"showcase", search_id:route.query.search_id, data:[{type:"text",content:"大佬最近有档期吗？我想约这个"},{type:"pic",content:route.query.works},{type:"price",content:"￥"+route.query.sold_num}]};
+
+                        let result = await axios.post(global.ServerPath+'/SubmitChat', {
+                             source_id:userinfo.value.id, target_id:route.query.target_id, 
+                             content:JSON.stringify(contentObj)});
                         if(result.data.error){ElMessage.error("发送失败");}
-                        else{sentRequire()}
+                        else{sentRequire().then(()=>{history.replaceState(history.state,"",'#'+router.currentRoute._rawValue.path)})}//还原URL，但不重载页面
                     }
                     else{//从require页面传来的约稿信息
-                        console.log(route.query.search_id);
+                        let contentObj={classify:"reservation", kind:"require", search_id:route.query.search_id, data:[{type:"text",content:"老板单还在吗？我想接这个"},{type:"title",content:route.query.title}]};
+                        if(route.query.describe_image){contentObj.data.push({type:"pic",content:route.query.describe_image});}
+                        contentObj.data.push({type:"tail",content:[{type:"money", content:route.query.money}, {type:"tag", content:route.query.tag}, {type:"calendar", content:route.query.calendar}]});
+
+                        let result = await axios.post(global.ServerPath+'/SubmitChat', {
+                             source_id:userinfo.value.id, target_id:route.query.target_id, 
+                             content:JSON.stringify(contentObj)});
+                        if(result.data.error){ElMessage.error("发送失败");}
+                        else{sentRequire().then(()=>{history.replaceState(history.state,"",'#'+router.currentRoute._rawValue.path)})}//还原URL，但不重载页面
                     }
                 }
             }
         }
     }
+
     /****************************watch监听控制显示无结果提示****************************/
     const showHadNotResult = ref(false);//显示无结果提示
     watch(AllChatLog,()=>{showHadNotResult.value=!(AllChatLog.value.length>0)})
@@ -199,8 +208,8 @@
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: 100%;
         max-width:100%;
+        min-width:100%;
         box-sizing: border-box;
         overflow: hidden;
         padding: 10px 40px;
@@ -212,6 +221,7 @@
 
         .communicate_information{
             flex-grow: 1;
+            flex-shrink: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -226,6 +236,8 @@
                 box-shadow: inset 2px 2px 2px 2px rgb(255 255 255 / 50%), 7px 7px 20px 0px rgb(0 0 0 / 10%), 4px 4px 5px 0px rgb(0 0 0 / 10%);
                 color: white;
                 overflow-y: auto;
+                display: flex;
+                flex-direction: column;
             }
 
             .unSubmit_content{
@@ -248,88 +260,6 @@
                 right:25px;
                 @media screen and (max-height: 325px) {
                     display: none;
-                }
-            }
-        }
-        .contacts{
-            height: 100%;
-            min-width: 250px;
-            box-sizing: border-box;
-            box-sizing: border-box;
-            @media screen and (max-width: 945px) {
-                min-width: 200px;
-            }
-
-            @media screen and (max-width: 610px) {
-                min-width: 150px;
-            }
-            
-            .scrollbar-demo-item {
-                display: flex;
-                flex-direction: row;
-                padding: 10px;
-                align-items: center;
-                cursor: pointer;
-                margin: 3px;
-                text-align: center;
-                border-radius: 4px;
-                transition: all 0.3s ease;
-                box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%), 7px 7px 20px 0px rgb(0 0 0 / 10%), 4px 4px 5px 0px rgb(0 0 0 / 10%);
-                
-                .profile_box{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    .profile{
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 50%;
-                    }
-                }
-
-                .info{
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
-                    align-items: flex-start;
-                    padding-left: 10px;
-                    .user_name{
-                        color: white;
-                        display: block;
-                        text-align: left;
-                        max-width: 163px;
-                        text-overflow: ellipsis; /* 文本溢出时显示省略号来代表被修剪的文本 */
-                        white-space: nowrap; /* 段落中的文本不进行换行 */
-                        overflow: hidden; /* 溢出部分隐藏 */
-                        @media screen and (max-width: 945px) {
-                            max-width: 113px;
-                        }
-
-                        @media screen and (max-width: 610px) {
-                            max-width: 70px;
-                        }
-                    }
-
-                    .last_community_content{
-                        color: rgb(137, 137, 137);
-                        display: block;
-                        text-align: left;
-                        max-width: 163px;
-                        text-overflow: ellipsis; /* 文本溢出时显示省略号来代表被修剪的文本 */
-                        white-space: nowrap; /* 段落中的文本不进行换行 */
-                        overflow: hidden; /* 溢出部分隐藏 */
-                        @media screen and (max-width: 945px) {
-                            max-width: 113px;
-                        }
-
-                        @media screen and (max-width: 610px) {
-                            max-width: 70px;
-                        }
-
-                        @media screen and (max-width: 500px) {
-                            display: none;
-                        }
-                    }
                 }
             }
         }

@@ -5,10 +5,10 @@
                 <div class="title">{{title}}</div>
                 <div class="describe">{{describe_require}}</div>
             </div>
-            <div class="rightBox">
+            <div class="rightBox" v-if="describe_image!=undefined">
                 <!-- 可以为空 -->
                 <el-image class="LazyloadImg"
-                    v-if="describe_image!=global.ServerPath"
+                    v-if="describe_image!=undefined"
                     :src="describe_image"
                     :lazy="lazyLoad"
                     scroll-container=".page-content"
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="require-box-figure">
-            <span class="moneny"><img src="/icons/money.svg"/>{{money}}</span>
+            <span class="money"><img src="/icons/money.svg"/>{{money}}</span>
             <span class="tag"><img src="/icons/tag.svg"/>{{tag}}</span>
             <span class="calendar"><img src="/icons/calendar.svg"/>{{calendar}}</span>
         </div>
@@ -55,7 +55,8 @@
     import { useRouter } from "vue-router";
     import { ref, defineProps, onMounted, onUnmounted, watch} from 'vue';
 
-    const props = defineProps({title:String, describe_require:String, describe_image:String, money:String, tag:String, calendar:String, profile:String, username:String, id:String, search_id:String});//从父组件传值到本组件
+    const props = defineProps({title:String, describe_require:String, describe_image:String, money:String,
+         tag:String, calendar:String, profile:String, username:String, id:String, search_id:String});//从父组件传值到本组件
     const global = useGlobal();//获取全局变量
     const store = global.Pinia;
     const { userinfo } = storeToRefs(store);
@@ -72,7 +73,9 @@
     /**私聊功能**/
     const router = useRouter();
     function clickDm_Button(){
-        router.replace({ name: "session", query: {target_id:props.id, search_id:props.search_id, type:"requireBox"}});
+        router.replace({ name: "session", query: {target_id:props.id, search_id:props.search_id, title:props.title,
+             describe_require:props.describe_require, describe_image:props.describe_image, money:props.money, 
+             calendar:props.calendar, tag:props.tag, type:"requireBox"}});
     }
 
     /**模态框打开关闭时改变url**/

@@ -4,7 +4,7 @@
             v-for="(item, index) in showRequireBoxes"
             :title="item.title"
             :describe_require="item.describe_require"
-            :describe_image="global.ServerPath+item.describe_image"
+            :describe_image="item.describe_image?global.ServerPath+item.describe_image:undefined"
             :money="item.money"
             :tag="item.tag"
             :calendar="item.calendar.substring(0, 10)"

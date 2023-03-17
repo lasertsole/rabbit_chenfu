@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 15/03/2023 22:31:35
+ Date: 17/03/2023 13:36:59
 */
 
 SET NAMES utf8mb4;
@@ -112,24 +112,20 @@ CREATE TABLE `session`  (
   `created_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '对话发表时间',
   `source_id` int(32) UNSIGNED ZEROFILL NOT NULL COMMENT '发话方唯一id',
   `target_id` int(32) UNSIGNED ZEROFILL NOT NULL COMMENT '目标方唯一id',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '对话内容',
+  `content` json NOT NULL COMMENT '对话内容',
   `search_id` int(32) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '查找时唯一id',
   PRIMARY KEY (`search_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 190 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of session
 -- ----------------------------
-INSERT INTO `session` VALUES ('2023-02-23 14:30:17', 00000000000000000000000000000001, 00000000000000000000000000000002, '我不是针对你', 00000000000000000000000000000001);
-INSERT INTO `session` VALUES ('2023-02-23 14:32:18', 00000000000000000000000000000001, 00000000000000000000000000000002, '我是说原神玩家都是辣鸡', 00000000000000000000000000000002);
-INSERT INTO `session` VALUES ('2023-02-23 14:32:48', 00000000000000000000000000000002, 00000000000000000000000000000001, '你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。', 00000000000000000000000000000003);
-INSERT INTO `session` VALUES ('2023-02-23 17:33:01', 00000000000000000000000000000002, 00000000000000000000000000000001, '现在充160再送160，快来一起原吧', 00000000000000000000000000000004);
-INSERT INTO `session` VALUES ('2023-02-23 18:18:37', 00000000000000000000000000000003, 00000000000000000000000000000001, '先生、トイレに行ってもいいですか？', 00000000000000000000000000000005);
-INSERT INTO `session` VALUES ('2023-02-23 18:19:22', 00000000000000000000000000000001, 00000000000000000000000000000003, '駄 目 で す', 00000000000000000000000000000006);
-INSERT INTO `session` VALUES ('2023-02-23 18:19:36', 00000000000000000000000000000003, 00000000000000000000000000000001, 'ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！', 00000000000000000000000000000007);
-INSERT INTO `session` VALUES ('2023-03-15 18:01:56', 00000000000000000000000000000001, 00000000000000000000000000000003, '<router-link class=\"showCase\" to=\"showcase\"><p>大佬最近有档期吗？我想约这个</p><img class=\"works\" src=\"http://localhost:8000/files/chenfuworks.jpg\"/><p class=\"price\">￥100</p></router-link>', 00000000000000000000000000000039);
-INSERT INTO `session` VALUES ('2023-03-15 18:02:49', 00000000000000000000000000000001, 00000000000000000000000000000003, '<a class=\"showCase\"><p>大佬最近有档期吗？我想约这个</p><img class=\"works\" src=\"http://localhost:8000/files/chenfuworks.jpg\"/><p class=\"price\">￥100</p></a>', 00000000000000000000000000000040);
-INSERT INTO `session` VALUES ('2023-03-15 18:02:55', 00000000000000000000000000000001, 00000000000000000000000000000003, '<a class=\"showCase\"><p>大佬最近有档期吗？我想约这个</p><img class=\"works\" src=\"http://localhost:8000/files/chenfuworks.jpg\"/><p class=\"price\">￥100</p></a>', 00000000000000000000000000000041);
+INSERT INTO `session` VALUES ('2023-03-17 12:58:58', 00000000000000000000000000000003, 00000000000000000000000000000001, '{\"data\": [{\"type\": \"text\", \"content\": \"现在开始私聊吧~\"}], \"classify\": \"chat\"}', 00000000000000000000000000000184);
+INSERT INTO `session` VALUES ('2023-03-17 12:58:58', 00000000000000000000000000000001, 00000000000000000000000000000003, '{\"data\": [{\"type\": \"text\", \"content\": \"老板单还在吗？我想接这个\"}, {\"type\": \"title\", \"content\": \"bl古风双人氛围插\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/85044_44453568709.jpg\"}, {\"type\": \"tail\", \"content\": [{\"type\": \"money\", \"content\": \"100-200\"}, {\"type\": \"tag\", \"content\": \"插画\"}, {\"type\": \"calendar\", \"content\": \"2023-03-01\"}]}], \"kind\": \"require\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000003\"}', 00000000000000000000000000000185);
+INSERT INTO `session` VALUES ('2023-03-17 13:35:14', 00000000000000000000000000000001, 00000000000000000000000000000003, '{\"data\": [{\"type\": \"text\", \"content\": \"大佬最近有档期吗？我想约这个\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/chenfuworks.jpg\"}, {\"type\": \"price\", \"content\": \"￥100\"}], \"kind\": \"showcase\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000003\"}', 00000000000000000000000000000186);
+INSERT INTO `session` VALUES ('2023-03-17 13:35:19', 00000000000000000000000000000005, 00000000000000000000000000000001, '{\"data\": [{\"type\": \"text\", \"content\": \"现在开始私聊吧~\"}], \"classify\": \"chat\"}', 00000000000000000000000000000187);
+INSERT INTO `session` VALUES ('2023-03-17 13:35:19', 00000000000000000000000000000001, 00000000000000000000000000000005, '{\"data\": [{\"type\": \"text\", \"content\": \"大佬最近有档期吗？我想约这个\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/QQ图片20230221141932.jpg\"}, {\"type\": \"price\", \"content\": \"￥25\"}], \"kind\": \"showcase\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000005\"}', 00000000000000000000000000000188);
+INSERT INTO `session` VALUES ('2023-03-17 13:35:23', 00000000000000000000000000000001, 00000000000000000000000000000005, '{\"data\": [{\"type\": \"text\", \"content\": \"1244444444124124\"}], \"classify\": \"chat\"}', 00000000000000000000000000000189);
 
 -- ----------------------------
 -- Table structure for showcase
@@ -166,7 +162,7 @@ CREATE TABLE `trends`  (
   `user_photos` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户发表图片，可以为多张或空',
   `search_id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '查找时唯一id',
   PRIMARY KEY (`search_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of trends

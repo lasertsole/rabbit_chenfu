@@ -5,8 +5,8 @@ const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submi
 const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr, changeLike, searchNewWorkBox} = require("./services/newWork.js")
 const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
 
-const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox} = require("./services/showcase.js")
-const {getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox} = require("./services/require.js")
+const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox, searchShowCaseBoxBySearchID} = require("./services/showcase.js")
+const {getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox, searchRequireBoxBySearchID} = require("./services/require.js")
 
 const {getSessionBox, getPersonList, submitChat} = require("./services/session.js")
 const {getAnnouncementBox} = require("./services/announcement.js")
@@ -64,12 +64,14 @@ app.get("/getShowCaseBox", getShowCaseBox)//获取橱窗盒子方法
 app.post("/submitShowCaseBoxImage", submitShowCaseBoxImage)//用户上传橱窗盒子的图片
 app.post("/submitShowCaseBox", submitShowCaseBox)//用户上传推荐盒子
 app.get("/searchShowCaseBox", searchShowCaseBox)//搜索橱窗盒子
+app.get("/searchShowCaseBoxBySearchID", searchShowCaseBoxBySearchID)//根据searchID查找橱窗盒子信息
 
 /*约稿-需求帖*/
 app.get("/getRequireBox", getRequireBox)//获取需求盒子方法
 app.post("/submitRequireBoxImage", submitRequireBoxImage)//用户上传需求盒子的图片
 app.post("/submitRequireBox", submitRequireBox)//用户上传需求盒子
 app.get("/searchRequireBox", searchRequireBox)//搜索需求盒子
+app.get("/searchRequireBoxBySearchID", searchRequireBoxBySearchID)//根据searchID查找需求盒子信息
 
 /*消息-会话*/
 app.get("/getSessionBox", getSessionBox)//获取消息盒子方法

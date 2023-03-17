@@ -1,5 +1,4 @@
 <template>
-    
     <div :class="{sessionBox:true,reverse:isMe}">
         <div class="profile">
             <el-image class="lazyloading"
@@ -8,18 +7,45 @@
                 scroll-container=".page-content"
             />
         </div>
-        <div class="content" v-html="content"></div>
+        <div class="content" :class="{chat:isChat,reservation:isReservation}" @click="showDetailPage">
+            <template v-for="(item,index) in contentObj.data">
+                <span class="text" v-if="item.type=='text'">{{item.content}}</span>
+                <p class="title" v-else-if="item.type=='title'">{{item.content}}</p>
+                <p class="pic" v-else-if="item.type=='pic'"><img :src="item.content"></p>
+                <p class="price" v-else-if="item.type=='price'">{{item.content}}</p>
+                <p class="tail" v-else-if="item.type=='tail'">
+                    <span v-for="(subItem, subIndex) in item.content" :className="subItem.type">{{subItem.content}}</span>
+                </p>
+            </template>
+        </div>
     </div>
-
 </template>
 
 <script setup>
+    import useGlobal from "/src/global";
     import { ref, defineProps, onMounted} from "vue";
 
     const props = defineProps({isMe:Boolean, content:String, profile:String});//从父组件传值到本组件
+    const global = useGlobal();//引入全局变量
+
+    const contentObj = ref(JSON.parse(props.content));
+
+    /**对话框样式控制**/
+    const isChat = ref(contentObj.value.classify=="chat");
+    const isReservation = ref(contentObj.value.classify=="reservation");
 
     /**控制懒加载**/
     const lazyLoad=ref(false);
+
+    /**控制模态框弹出**/
+    const detailPage = global.detailPage;
+    function showDetailPage(){
+        switch(contentObj.value.classify){
+            case 'reservation':
+                detailPage.openModel("server", contentObj.value.kind, contentObj.value.search_id);
+            break;
+        }
+    }
 
     /**挂载触发**/
     onMounted(()=>{
@@ -32,6 +58,8 @@
         display: flex;
         flex-direction: row;
         margin-bottom: 10px;
+        box-sizing: border-box;
+        max-width: 100%;
         .profile{
             position: relative;
             .lazyloading{
@@ -77,7 +105,7 @@
             word-break: break-all;
 
             @media screen and (max-width: 610px) {
-                max-width: 100%;
+                max-width: 99%;
             }
         }
     }
@@ -97,28 +125,62 @@
             margin-right: 16px;
             background-color:cyan;
             direction:ltr;
-            @media screen and (max-width: 610px) {
-                max-width: 100%;
-            }
         }
     }
 </style>
 <style lang="scss">
     .sessionBox{
         .content{
-            .showCase{
-                color: black;
-                max-width: 300px;
-                display: block;
-                .works{
-                    margin-top: 10px;
+            &.chat{
+                
+            }
+
+            &.reservation{
+                max-width: calc(100% - 133px);
+                cursor: pointer;
+
+                @media screen and (max-width: 610px) {
+                    max-width: 99%;
+                }
+            }
+
+            >*{
+                margin-top: 5px;
+            }
+
+            .text{
+
+            }
+            .title{
+                color: blue;
+            }
+            .pic{
+                img{
                     width: 100%;
+                    height: 100%;
+                    max-width: 350px;
+                }
+            }
+            .price{
+                color: #ff5000;
+            }
+
+            .tail{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                font-size: 12px;
+                color: #929292;
+                >*{
+                    padding: 0px 15px;
+                    background-size: 13px;
+                    background-repeat: no-repeat;
+                    background-position: left center;
                 }
 
-                .price{
-                    margin-top: 5px;
-                    color: #ff5000;
-                }
+                .money{background-image: url(/icons/money.svg);}
+                .calendar{background-image: url(/icons/calendar.svg);}
+                .tag{background-image: url(/icons/tag.svg);}
             }
         }
     }
