@@ -11,9 +11,13 @@
             <template v-for="(item,index) in contentObj.data">
                 <span class="text" v-if="item.type=='text'">{{item.content}}</span>
                 <p class="title" v-else-if="item.type=='title'">{{item.content}}</p>
-                <p class="pic" v-else-if="item.type=='pic'"><img :src="item.content"></p>
-                <p class="price" v-else-if="item.type=='price'">{{item.content}}</p>
+                <p class="pic" v-else-if="item.type=='pic'">
+                    <el-image :lazy="false" :src="item.content"/>
+                </p>
                 <p class="tail" v-else-if="item.type=='tail'">
+                    <span v-for="(subItem, subIndex) in item.content" :className="subItem.type">{{subItem.content}}</span>
+                </p>
+                <p class="transact_info" v-else-if="item.type=='transact_info'">
                     <span v-for="(subItem, subIndex) in item.content" :className="subItem.type">{{subItem.content}}</span>
                 </p>
             </template>
@@ -23,7 +27,7 @@
 
 <script setup>
     import useGlobal from "/src/global";
-    import { ref, defineProps, onMounted} from "vue";
+    import { ref, defineProps, onMounted, onUnmounted } from "vue";
 
     const props = defineProps({isMe:Boolean, content:String, profile:String});//从父组件传值到本组件
     const global = useGlobal();//引入全局变量
@@ -50,6 +54,11 @@
     /**挂载触发**/
     onMounted(()=>{
         lazyLoad.value=true;//启动懒加载
+    })
+
+    /**卸载载触发**/
+    onUnmounted(()=>{
+        lazyLoad.value=false;//重置懒加载
     })
 </script>
 
@@ -161,8 +170,12 @@
                     max-width: 350px;
                 }
             }
-            .price{
-                color: #ff5000;
+            .transact_info{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                .price{color: #ff5000;&::before{content: "￥";display: inline;}}
+                .sold_num{color: rgb(146, 146, 146);font-size: 12px;&::before{content: "已售";display: inline;}}
             }
 
             .tail{

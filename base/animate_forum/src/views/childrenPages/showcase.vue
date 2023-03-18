@@ -45,7 +45,6 @@
     import { onMounted, onUnmounted, ref, watch } from "vue";
     import showCaseBox from "/src/components/reservation/showcase/showCaseBox.vue"
     import showcaseUploadBox from "/src/components/reservation/showcase/showcaseUploadBox.vue"
-import { computeStyles, left } from "@popperjs/core";
 
     const global = useGlobal();
     const tempStore = global.TempPinia;

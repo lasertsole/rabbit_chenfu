@@ -124,7 +124,10 @@
                          target_id:userinfo.value.id, content:JSON.stringify(contentObj)});
                          
                     if(result.data.error){ElMessage.error("发送失败");}
-                    else{sentRequire().then(()=>{indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id)})}
+                    else{sentRequire().then(()=>{
+                        indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id);
+                        history.replaceState(history.state,"",'#'+router.currentRoute._rawValue.path);
+                    })}
                 }
                 else{
                     indexContacts.value=uniqueContactsIdArr.value.indexOf(route.query.target_id);
@@ -132,7 +135,7 @@
 
                 if(route.query.search_id&&route.query.type){//传交易信息到session
                     if(route.query.type=="showCaseBox"){//从showCase页面传来的约稿信息
-                        let contentObj={classify:"reservation", kind:"showcase", search_id:route.query.search_id, data:[{type:"text",content:"大佬最近有档期吗？我想约这个"},{type:"pic",content:route.query.works},{type:"price",content:"￥"+route.query.sold_num}]};
+                        let contentObj={classify:"reservation", kind:"showcase", search_id:route.query.search_id, data:[{type:"text",content:"大佬最近有档期吗？我想约这个"},{type:"pic",content:route.query.works},{type:"text",content:route.query.recomment},{type:"transact_info",content:[{type:"price",content:route.query.price},{type:"sold_num",content:route.query.sold_num}]}]};
 
                         let result = await axios.post(global.ServerPath+'/SubmitChat', {
                              source_id:userinfo.value.id, target_id:route.query.target_id, 

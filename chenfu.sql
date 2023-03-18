@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 17/03/2023 13:36:59
+ Date: 18/03/2023 17:19:24
 */
 
 SET NAMES utf8mb4;
@@ -54,7 +54,7 @@ CREATE TABLE `newwork`  (
 -- Records of newwork
 -- ----------------------------
 INSERT INTO `newwork` VALUES ('/files/01130_9049698068.jpg', '孤独摇滚', 517, 00000000000000000000000000000004, 00000000000000000000000000000001, '2023-03-07 11:29:18');
-INSERT INTO `newwork` VALUES ('/files/145250_17005731512.jpg', '牵着我的手', 34, 00000000000000000000000000000003, 00000000000000000000000000000002, '2023-03-07 11:29:18');
+INSERT INTO `newwork` VALUES ('/files/145250_17005731512.jpg', '牵着我的手', 33, 00000000000000000000000000000003, 00000000000000000000000000000002, '2023-03-07 11:29:18');
 INSERT INTO `newwork` VALUES ('/files/16467_76799064315.jpg', '又生了个女儿~', 98, 00000000000000000000000000000001, 00000000000000000000000000000003, '2023-03-07 11:29:18');
 INSERT INTO `newwork` VALUES ('/files/223136_49612231063.jpg', '都市龙娘', 211, 00000000000000000000000000000005, 00000000000000000000000000000004, '2023-03-07 11:29:18');
 INSERT INTO `newwork` VALUES ('/files/f3baeca8589392d2923e6e65a37b245.jpg', '少女与海', 89, 00000000000000000000000000000002, 00000000000000000000000000000005, '2023-03-07 11:29:18');
@@ -75,10 +75,9 @@ CREATE TABLE `newwork_like`  (
 -- ----------------------------
 INSERT INTO `newwork_like` VALUES (00000000000000000000000000000003, 00000000000000000000000000000003, '2023-03-07 11:30:45');
 INSERT INTO `newwork_like` VALUES (00000000000000000000000000000004, 00000000000000000000000000000003, '2023-03-07 11:30:45');
-INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000001, '2023-03-13 17:05:14');
-INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000002, '2023-03-13 17:04:49');
-INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000004, '2023-03-13 17:05:18');
-INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000005, '2023-03-13 17:05:24');
+INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000001, '2023-03-18 17:12:08');
+INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000004, '2023-03-18 17:12:30');
+INSERT INTO `newwork_like` VALUES (00000000000000000000000000000005, 00000000000000000000000000000005, '2023-03-18 17:12:25');
 
 -- ----------------------------
 -- Table structure for requirebox
@@ -115,17 +114,11 @@ CREATE TABLE `session`  (
   `content` json NOT NULL COMMENT '对话内容',
   `search_id` int(32) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '查找时唯一id',
   PRIMARY KEY (`search_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 190 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 229 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of session
 -- ----------------------------
-INSERT INTO `session` VALUES ('2023-03-17 12:58:58', 00000000000000000000000000000003, 00000000000000000000000000000001, '{\"data\": [{\"type\": \"text\", \"content\": \"现在开始私聊吧~\"}], \"classify\": \"chat\"}', 00000000000000000000000000000184);
-INSERT INTO `session` VALUES ('2023-03-17 12:58:58', 00000000000000000000000000000001, 00000000000000000000000000000003, '{\"data\": [{\"type\": \"text\", \"content\": \"老板单还在吗？我想接这个\"}, {\"type\": \"title\", \"content\": \"bl古风双人氛围插\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/85044_44453568709.jpg\"}, {\"type\": \"tail\", \"content\": [{\"type\": \"money\", \"content\": \"100-200\"}, {\"type\": \"tag\", \"content\": \"插画\"}, {\"type\": \"calendar\", \"content\": \"2023-03-01\"}]}], \"kind\": \"require\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000003\"}', 00000000000000000000000000000185);
-INSERT INTO `session` VALUES ('2023-03-17 13:35:14', 00000000000000000000000000000001, 00000000000000000000000000000003, '{\"data\": [{\"type\": \"text\", \"content\": \"大佬最近有档期吗？我想约这个\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/chenfuworks.jpg\"}, {\"type\": \"price\", \"content\": \"￥100\"}], \"kind\": \"showcase\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000003\"}', 00000000000000000000000000000186);
-INSERT INTO `session` VALUES ('2023-03-17 13:35:19', 00000000000000000000000000000005, 00000000000000000000000000000001, '{\"data\": [{\"type\": \"text\", \"content\": \"现在开始私聊吧~\"}], \"classify\": \"chat\"}', 00000000000000000000000000000187);
-INSERT INTO `session` VALUES ('2023-03-17 13:35:19', 00000000000000000000000000000001, 00000000000000000000000000000005, '{\"data\": [{\"type\": \"text\", \"content\": \"大佬最近有档期吗？我想约这个\"}, {\"type\": \"pic\", \"content\": \"http://localhost:8000/files/QQ图片20230221141932.jpg\"}, {\"type\": \"price\", \"content\": \"￥25\"}], \"kind\": \"showcase\", \"classify\": \"reservation\", \"search_id\": \"00000000000000000000000000000005\"}', 00000000000000000000000000000188);
-INSERT INTO `session` VALUES ('2023-03-17 13:35:23', 00000000000000000000000000000001, 00000000000000000000000000000005, '{\"data\": [{\"type\": \"text\", \"content\": \"1244444444124124\"}], \"classify\": \"chat\"}', 00000000000000000000000000000189);
 
 -- ----------------------------
 -- Table structure for showcase
@@ -162,7 +155,7 @@ CREATE TABLE `trends`  (
   `user_photos` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户发表图片，可以为多张或空',
   `search_id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '查找时唯一id',
   PRIMARY KEY (`search_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of trends

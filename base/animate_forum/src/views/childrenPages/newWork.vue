@@ -5,8 +5,7 @@
                 <newWorkBox
                     :item="item"
                     :url="url"
-                    :index="index"
-                    :likeStatusArr="likeStatusArr">
+                    :index="index">
                 </newWorkBox>
             </template>
         </Waterfall>
@@ -46,6 +45,7 @@
 
     const global = useGlobal();
     const store = global.Pinia;
+    const detailPage = global.detailPage;
     const { userinfo } = storeToRefs(store);
     const imgsArr = ref([]);
     
@@ -67,7 +67,9 @@
     const likeStatusArr = ref([]);//点赞列表
     async function getLikeStatusArr(){//请求点赞列表
         let result = await axios.get(global.ServerPath+'/getLikeStatusArr');
-        if(!result.data.error){likeStatusArr.value=result.data;}
+        if(!result.data.error){
+            detailPage.setLikeStatusArr(result.data);
+        }
         else{ElMessage.error("请求点赞列表失败");}
     }
 
