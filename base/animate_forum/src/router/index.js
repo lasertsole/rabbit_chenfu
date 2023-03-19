@@ -1,9 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 /*一级路由*/
-import index from "../views/Index.vue"
-import Reservation from "../views/Reservation.vue"
-import message from "../views/message.vue"
-import Person from "../views/Person.vue"
+import framepage from "../views/framepage.vue"
 
 /*二级路由*/
 import newWork from "../views/childrenPages/newWork.vue"
@@ -21,6 +18,7 @@ import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus';
 
 let Mainstore = null;
+let tabBarStore = null;
 
 const routes = [
     //首页
@@ -32,7 +30,7 @@ const routes = [
     {
         path: '/index',
         name: 'index',
-        component: index,
+        component: framepage,
         redirect:'/index/newWork',
         children:[
             //新作品
@@ -58,7 +56,7 @@ const routes = [
     {
        path: "/Reservation",
        name: "Reservation",
-       component: Reservation,
+       component: framepage,
        redirect:'/Reservation/showcase',
        children:[
         //橱窗
@@ -80,7 +78,7 @@ const routes = [
     {
         path: "/message",
         name: "message",
-        component: message,
+        component: framepage,
         redirect:'/message/session',
         children:[
             //会话
@@ -102,7 +100,7 @@ const routes = [
     {
         path: "/Person",
         name: "Person",
-        component: Person,
+        component: framepage,
         redirect:'/Person/manager',
         children:[
             //管理
@@ -122,14 +120,37 @@ const router = createRouter({
 
 
 /********************路由守卫********************/
-router.initRouterGuard = function(store) {//初始化路由守卫
+router.initRouterGuard = function(store,tabBar) {//初始化路由守卫
     Mainstore = store;
+    tabBarStore = tabBar;
 }
 
 const powerArr=["session", "announcement"];//只有登录后才能访问的权限页面
 
 router.beforeResolve((to, from, next) => {
     const {token} = storeToRefs(Mainstore);
+    
+    switch(to.name){
+        case "newWork":
+        case "trends":
+            tabBarStore.setTabBarIndex(1);
+        break;
+
+        case "showcase":
+        case "require":
+            tabBarStore.setTabBarIndex(2);
+        break;
+
+        case "session":
+        case "announcement":
+            tabBarStore.setTabBarIndex(3);
+        break;
+
+        case "manager":
+            tabBarStore.setTabBarIndex(4);
+        break;
+    }
+
     if(powerArr.indexOf(to.name)!=-1&&!token.value){//判断用户访问的页面是否在权限页面
         next(false);
         ElMessage.error("该页面需要登录才能访问");

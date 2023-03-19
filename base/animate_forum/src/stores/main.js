@@ -33,6 +33,16 @@ export const useMainStore = defineStore({//持久化存储用户信息
     }
 })
 
+export const useTabBarStore = defineStore({//持久化存储用户信息
+    id: 'tabBar', 
+    state: () => ({
+        tabBarIndex:1
+    }),
+    actions:{
+        setTabBarIndex:function(tabBarIndex){this.tabBarIndex=tabBarIndex}
+    }
+})
+
 export const useDetailPageStore = defineStore({//临时存储detail页信息
     id: 'detailPage', 
     state: () => ({

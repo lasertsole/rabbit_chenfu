@@ -2,8 +2,21 @@
     <div class="page">
         <!-- 功能分页 屏幕宽度小于610px显示-->
         <div class="page-menu">
-            <router-link  active-class="active" to="/Reservation/showcase">橱窗</router-link>
-            <router-link  active-class="active" to="/Reservation/require">需求贴</router-link>
+            <template v-if="tabBarIndex==1">
+                <router-link  active-class="active" to="/index/newWork">新作品</router-link>
+                <router-link  active-class="active" to="/index/trends">动态</router-link>
+            </template>
+            <template v-else-if="tabBarIndex==2">
+                <router-link  active-class="active" to="/Reservation/showcase">橱窗</router-link>
+                <router-link  active-class="active" to="/Reservation/require">需求贴</router-link>
+            </template>
+            <template v-else-if="tabBarIndex==3">
+                <router-link  active-class="active" to="/message/session">会话</router-link>
+                <router-link  active-class="active" to="/message/announcement">公告</router-link>
+            </template>
+            <template v-else-if="tabBarIndex==4">
+                <router-link  active-class="active" to="/Person/manager">管理</router-link>
+            </template>
         </div>
 
         <!-- 显示内容 -->
@@ -14,6 +27,12 @@
 </template>
 
 <script setup>
+    import useGlobal from "/src/global";
+    import { storeToRefs } from "pinia";
+
+    const global = useGlobal();//引入全局变量
+    const tabBar = global.tabBar;
+    const { tabBarIndex } = storeToRefs(tabBar);//引入token
 </script>
 
 <style lang="scss" scoped>
@@ -22,7 +41,6 @@
         flex-direction: column;
         width: 100%;
         height: 100%;
-        
 
         &-menu{
             margin-top: 10px;
@@ -59,8 +77,9 @@
 
         &-content{
             flex-grow: 1;
-            overflow-y: scroll;
+            overflow: hidden;
             display: flex;
+            overflow-y: auto;
             flex-direction: row;
             justify-content: center;
         }
@@ -86,6 +105,7 @@
             }
         }
     }
+
     ::-webkit-scrollbar {
         width: 4px;
         border-radius: 10px;

@@ -7,7 +7,7 @@ import router from '/src/router'
 
 //引入pinia持久化存储和临时性存储
 import store from '/src/stores'
-import { useMainStore, useDetailPageStore }  from "/src/stores/main.js"
+import { useMainStore, useDetailPageStore, useTabBarStore }  from "/src/stores/main.js"
 
 //引入Element-Plus
 import ElementPlus from 'element-plus'
@@ -29,8 +29,10 @@ app.use(ElementPlus);
 //将pinia存储的数据全局化
 let mainStore = useMainStore();
 let detailPageStore = useDetailPageStore();
+let tabBarStore = useTabBarStore();
 app.config.globalProperties.Pinia = mainStore;
 app.config.globalProperties.detailPage = detailPageStore;
+app.config.globalProperties.tabBar = tabBarStore;
 //事件总线全局化
 app.config.globalProperties.Bus = new mitt();
 //服务器地址与端口全局化
@@ -59,7 +61,7 @@ axios.interceptors.response.use((res)=>{
 	return res;
 });
 
-router.initRouterGuard(mainStore)//初始化路由守卫
+router.initRouterGuard(mainStore, tabBarStore)//初始化路由守卫
 detailPageStore.initServerPath(ServerPath)//初始化detailPageStore的服务器地址
 
 app.mount('#app')

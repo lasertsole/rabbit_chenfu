@@ -12,7 +12,7 @@
 <script setup>
   import HeaderComponent from "/src/components/HeaderComponent.vue"
   import BottomComponent from "/src/components/BottomComponent.vue"
-  import detailPage from "/src/components/detailPage.vue"
+  import detailPage from "/src/views/detailPage.vue"
 </script>
 
 <style lang="scss" scoped>
