@@ -26,7 +26,11 @@
         </template>
         <!-- 模态框内容 -->
         <div class="content">
-            <showcaseUploadBox @submitImageSuccess="submitImageSuccess" ref="upload" :action="global.ServerPath+'/submitShowCaseBoxImage'"></showcaseUploadBox>
+            <showcaseUploadBox
+                @submitImageSuccess="submitImageSuccess"
+                ref="upload"
+                :action="global.ServerPath+'/submitShowCaseBoxImage'">
+            </showcaseUploadBox>
             <input v-model="uploadPrice" placeholder="写下你要定的价格"/>
             <input v-model="uploadComment" placeholder="写下你的介绍吧"/>
             <button @click="clickUpload">提交</button>

@@ -6,7 +6,7 @@ const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr,
 const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
 
 const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox, searchShowCaseBoxBySearchID} = require("./services/showcase.js")
-const {getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox, searchRequireBoxBySearchID} = require("./services/require.js")
+const {getRequireBox, submitRequireBox, searchRequireBox, searchRequireBoxBySearchID} = require("./services/require.js")
 
 const {getSessionBox, getPersonList, submitChat} = require("./services/session.js")
 const {getAnnouncementBox} = require("./services/announcement.js")
@@ -20,12 +20,14 @@ app.use(cors());
 app.use(express.json());
 app.use('/files',express.static(path.join(__dirname,"../../files")));
 
-// var multipart = require('connect-multiparty');
-// var multipartMiddleware = multipart();
-// app.use(multipart({uploadDir:path.join(__dirname,"../../files")}));
+// const multiparty = require('multiparty');
 
-// app.post('/upload',multipartMiddleware, function (req,res) {
-// 	console.log(req.body,req.files);//分别返回body，文件属性，以及文件存放地址
+// app.post('/upload', async function (req,res) {
+// 	const form = new multiparty.Form()
+// 	form.parse(req, function(err, fields, files) {
+// 		console.log(fields);
+// 		// console.log(files);
+// 	});
 // })
 
 /*测试连接性*/
@@ -68,7 +70,6 @@ app.get("/searchShowCaseBoxBySearchID", searchShowCaseBoxBySearchID)//根据sear
 
 /*约稿-需求帖*/
 app.get("/getRequireBox", getRequireBox)//获取需求盒子方法
-app.post("/submitRequireBoxImage", submitRequireBoxImage)//用户上传需求盒子的图片
 app.post("/submitRequireBox", submitRequireBox)//用户上传需求盒子
 app.get("/searchRequireBox", searchRequireBox)//搜索需求盒子
 app.get("/searchRequireBoxBySearchID", searchRequireBoxBySearchID)//根据searchID查找需求盒子信息

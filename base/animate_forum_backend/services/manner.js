@@ -8,7 +8,6 @@ const FILES_DIR = '../../files/'
 function fileUpload(req) {
     return new Promise(function (resolve, reject) {
         const form = formidable({ hashAlgorithm: 'md5' })
-
         form.parse(req, (error, fields, files) => {
             if (error) {
                 resolve({ error })

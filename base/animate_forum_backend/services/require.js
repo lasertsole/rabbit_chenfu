@@ -1,5 +1,6 @@
-const db = require('../db.js')
-const { fileUpload } = require('./manner.js')
+const db = require('../db.js');
+const multiparty = require('multiparty');
+const { fileUpload } = require('./manner.js');
 
 /***********************约稿-需求帖***********************/
 async function getRequireBox(req, res) {//获取需求盒子方法
@@ -14,36 +15,36 @@ async function getRequireBox(req, res) {//获取需求盒子方法
     }
 };
 
-async function submitRequireBoxImage(req, res) {//用户上传需求盒子
+async function submitRequireBox(req, res) {//用户上传需求盒子的图片
+    let form = new multiparty.Form();
+
+    let title = undefined;
+    let describe = undefined;
+    let describe_image = undefined;
+    let money = undefined;
+    let tag = undefined;
+    let calendar= undefined;
+    let id = undefined;
+    await form.parse(req, function(err, fields, files) {
+        title = fields.title[0];
+        describe = fields.describe[0];
+        money = fields.money[0];
+        tag = fields.tag[0];
+        calendar= fields.calendar[0];
+        id = fields.id[0];
+        console.log(fields);
+	});
+
     let result = await fileUpload(req);
     if(!result.error){
-        res.send(result);
-    }else{
-        res.send({error:"作品上传失败"});
-    }
-    console.log(result);
-};
-
-async function submitRequireBox(req, res) {//用户上传需求盒子
-    let data = req.body;
-
-    let title = data.title;
-    let describe = data.describe;
-    let describe_image = data.describe_image;
-    if(describe_image==undefined){
-        describe_image="";
-    }
-    else{
+        describe_image=result;
         describe_image = "/files/" + describe_image;
     }
-    let money = data.money;
-    let tag = data.tag;
-    let calendar= data.calendar;
-    let id = data.id;
-    let username = data.username;
+    else{res.send({error:"作品上传失败"});}
 
+    console.log(title);
     let sql = 'insert into requirebox (title, describe_require, describe_image, money, tag, calendar, id) values (?, ?, ?, ?, ?, ?, ?)'
-    let result = await db.query(sql, [title, describe, describe_image, money, tag, calendar, id]);
+    result = await db.query(sql, [title, describe, describe_image, money, tag, calendar, id]);
     if(result.error||result.length==0){
         res.send({error:"数据库插入失败"});
     }else{
@@ -79,7 +80,6 @@ async function searchRequireBoxBySearchID(req, res){//根据searchID查找需求
 module.exports={
     //约稿-需求帖
     getRequireBox,
-    submitRequireBoxImage,
     submitRequireBox,
     searchRequireBox,
     searchRequireBoxBySearchID,

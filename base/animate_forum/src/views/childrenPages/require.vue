@@ -34,7 +34,7 @@
             <uploadRequireBox
                 ref="upload"
                 @submitImageSuccess="submitImageSuccess"
-                :action="global.ServerPath+'/submitRequireBoxImage'"
+                :action="global.ServerPath+'/submitRequireBox'"
                 :title="uploadTitle"
                 :describe="uploadComment"
                 :money="uploadPrice"

@@ -78,6 +78,15 @@
     async function request(params){//替换掉原本的xhr请求
         const formData = new FormData();//第一次请求
         formData.append("file", params.file);
+        formData.append("title", props.title);
+        formData.append("describe", props.describe);
+        formData.append("describe_image", props.describe_image);
+        formData.append("money", props.money);
+        formData.append("tag", props.tag);
+        let nowDate=props.calendar?.toLocaleString('zh', { hour12: false }).split('/').join("-");//将时间格式化(?有可能为underfine)    
+        formData.append("calendar", nowDate);
+        formData.append("id", userinfo.value.id);
+        
         let result = await axios({
             method: 'post',
             url: params.action,
@@ -86,11 +95,9 @@
             },
             data: formData,
         });
-        let imgPath = result.data;
-        
-        let nowDate=props.calendar?.toLocaleString('zh', { hour12: false }).split('/').join("-");//将时间格式化(?有可能为underfine)        
-        let obj = {title:props.title, describe:props.describe, describe_image:imgPath, money:props.money, tag:props.tag, calendar:nowDate, id:userinfo.value.id};
-        result = await axios.post(global.ServerPath+"/submitRequireBox", obj);//第二次请求
+
+        console.log(formData);
+
         if(!result.data.error){
             emits("submitImageSuccess");
             ElMessage.success("上传成功");
