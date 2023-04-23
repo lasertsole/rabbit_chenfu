@@ -1,15 +1,15 @@
 const express = require("express")
 const cors = require('cors')
-const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName} = require("./services/account.js")
+const {fasterLogin, login, register, submitUserProfile, changeUserProfile, submitNewName } = require("./services/account.js")
 
-const {getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr, changeLike, searchNewWorkBox} = require("./services/newWork.js")
-const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox} = require("./services/trends.js")
+const { getnewWorkBox, submitnewWorkBoxImage, submitnewWorkBox, getLikeStatusArr, changeLike, searchNewWorkBox } = require("./services/newWork.js")
+const { getTrendsBox, submitTrendsBoxImage, submitTrendsBox, searchTrendsBox } = require("./services/trends.js")
 
-const {getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox, searchShowCaseBoxBySearchID} = require("./services/showcase.js")
-const {getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox, searchRequireBoxBySearchID} = require("./services/require.js")
+const { getShowCaseBox, submitShowCaseBoxImage, submitShowCaseBox, searchShowCaseBox, searchShowCaseBoxBySearchID } = require("./services/showcase.js")
+const { getRequireBox, submitRequireBoxImage, submitRequireBox, searchRequireBox, searchRequireBoxBySearchID } = require("./services/require.js")
 
-const {getSessionBox, getPersonList, submitChat} = require("./services/session.js")
-const {getAnnouncementBox} = require("./services/announcement.js")
+const { getSessionBox, getPersonList, submitChat } = require("./services/session.js")
+const { getAnnouncementBox } = require("./services/announcement.js")
 
 const path = require('path')
 

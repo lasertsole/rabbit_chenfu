@@ -2,7 +2,9 @@
   <div class="main">
     <HeaderComponent></HeaderComponent>
     <div class="wrapper">
-      <router-view></router-view>
+      <KeepAlive>
+        <router-view></router-view>
+      </KeepAlive>
     </div>
     <BottomComponent></BottomComponent>
   </div>

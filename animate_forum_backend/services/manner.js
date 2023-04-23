@@ -6,6 +6,7 @@ const FILES_DIR = '../../files/'
 
 /***********************用户上传***********************/
 function fileUpload(req) {
+    console.log(req);
     return new Promise(function (resolve, reject) {
         const form = formidable({ hashAlgorithm: 'md5' })
 

@@ -97,8 +97,7 @@
 
 
     /****************************登录功能****************************/
-    const {token}=storeToRefs(store);//用户登录后获得的令牌
-    const {userinfo}=storeToRefs(store);//用户登录后获得的用户信息
+    const {token, userinfo}=storeToRefs(store);//用户登录后获得的令牌和用户信息
     const modernChange=ref(true);//更换登录或注册模式
     const inputPhone=ref("");//输入框手机号码
     const inputPassword=ref("");//输入框密码
