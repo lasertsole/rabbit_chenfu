@@ -20,13 +20,13 @@ app.use(cors());
 app.use(express.json());
 app.use('/files',express.static(path.join(__dirname,"../../files")));
 
-// var multipart = require('connect-multiparty');
-// var multipartMiddleware = multipart();
-// app.use(multipart({uploadDir:path.join(__dirname,"../../files")}));
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
+app.use(multipart({uploadDir:path.join(__dirname,"../../files")}));
 
-// app.post('/upload',multipartMiddleware, function (req,res) {
-// 	console.log(req.body,req.files);//分别返回body，文件属性，以及文件存放地址
-// })
+app.post('/user/setProfile',multipartMiddleware, function (req,res) {
+	console.log(req.body,req.files);//分别返回body，文件属性，以及文件存放地址
+})
 
 /*测试连接性*/
 app.get('/',(req,res)=>{
