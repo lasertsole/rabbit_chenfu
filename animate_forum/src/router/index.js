@@ -120,7 +120,7 @@ const router = createRouter({
 
 
 /********************路由守卫********************/
-router.initRouterGuard = function(store,tabBar) {//初始化路由守卫
+router.initRouterGuard = function(store, tabBar) {//初始化路由守卫
     Mainstore = store;
     tabBarStore = tabBar;
 }
